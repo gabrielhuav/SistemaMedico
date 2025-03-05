@@ -1,4 +1,4 @@
-package HolaSpring6CV3.config;
+package SistemaMedico.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
