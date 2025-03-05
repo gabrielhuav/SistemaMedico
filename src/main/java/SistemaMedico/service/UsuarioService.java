@@ -1,12 +1,12 @@
-package HolaSpring6CV3.service;
+package SistemaMedico.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import HolaSpring6CV3.entity.Usuario;
-import HolaSpring6CV3.repository.UsuarioRepository;
+import SistemaMedico.entity.Usuario;
+import SistemaMedico.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 @Service
