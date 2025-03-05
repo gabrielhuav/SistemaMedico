@@ -1,4 +1,4 @@
-package HolaSpring6CV3.controller;
+package SistemaMedico.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import HolaSpring6CV3.entity.Rol;
-import HolaSpring6CV3.entity.Usuario;
-import HolaSpring6CV3.repository.UsuarioRepository;
-import HolaSpring6CV3.service.CustomUserDetailsService;
+import SistemaMedico.entity.Rol;
+import SistemaMedico.entity.Usuario;
+import SistemaMedico.repository.UsuarioRepository;
+import SistemaMedico.service.CustomUserDetailsService;
 
 @RestController
 @RequestMapping("/api")
