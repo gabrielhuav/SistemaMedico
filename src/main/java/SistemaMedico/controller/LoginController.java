@@ -1,4 +1,4 @@
-package HolaSpring6CV3.controller;
+package SistemaMedico.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import HolaSpring6CV3.entity.Usuario;
-import HolaSpring6CV3.repository.UsuarioRepository;
+import SistemaMedico.entity.Usuario;
+import SistemaMedico.repository.UsuarioRepository;
 @Controller
 
 public class LoginController {
