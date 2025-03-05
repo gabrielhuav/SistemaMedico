@@ -1,8 +1,8 @@
 
 
-DROP DATABASE IF EXISTS SistenaMedico;
-CREATE DATABASE SistemaMedico CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE SistemaMedico;
+DROP DATABASE IF EXISTS sistemamedico;
+CREATE DATABASE sistemamedico CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE sistemamedico;
 
 CREATE TABLE usuarios (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -31,9 +31,9 @@ DROP USER IF EXISTS 'admin'@'localhost';
 FLUSH PRIVILEGES;
 
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
-GRANT ALL PRIVILEGES ON tarea2.* TO 'admin'@'localhost';
+GRANT ALL PRIVILEGES ON sistemamedico.* TO 'admin'@'localhost';
 FLUSH PRIVILEGES;
 
 
-
+SELECT * FROM usuarios;
 
