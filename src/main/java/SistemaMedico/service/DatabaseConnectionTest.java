@@ -1,4 +1,4 @@
-package HolaSpring6CV3.service;
+package SistemaMedico.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
