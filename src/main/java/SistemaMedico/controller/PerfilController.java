@@ -1,7 +1,7 @@
-package HolaSpring6CV3.controller;
+package SistemaMedico.controller;
 
-import HolaSpring6CV3.entity.Usuario;
-import HolaSpring6CV3.repository.UsuarioRepository;
+import SistemaMedico.entity.Usuario;
+import SistemaMedico.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
