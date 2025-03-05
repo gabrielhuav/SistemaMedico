@@ -1,4 +1,4 @@
-package HolaSpring6CV3;
+package SistemaMedico;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
