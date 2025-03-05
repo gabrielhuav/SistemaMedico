@@ -1,5 +1,5 @@
-package HolaSpring6CV3.SistemaAutenticacion;
-import HolaSpring6CV3.service.DatabaseConnectionTest;
+package SistemaMedico.SistemaAutenticacion;
+import SistemaMedico.service.DatabaseConnectionTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
