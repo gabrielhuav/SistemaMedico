@@ -1,4 +1,4 @@
-package HolaSpring6CV3.entity;
+package SistemaMedico.entity;
 
 import java.util.HashSet;
 import java.util.Set;
