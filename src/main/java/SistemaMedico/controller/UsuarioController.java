@@ -1,4 +1,4 @@
-package HolaSpring6CV3.controller;
+package SistemaMedico.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import HolaSpring6CV3.entity.Usuario;
-import HolaSpring6CV3.repository.UsuarioRepository;
-import HolaSpring6CV3.service.UsuarioService;;
+import SistemaMedico.entity.Usuario;
+import SistemaMedico.repository.UsuarioRepository;
+import SistemaMedico.service.UsuarioService;;
 
 
 @Controller
