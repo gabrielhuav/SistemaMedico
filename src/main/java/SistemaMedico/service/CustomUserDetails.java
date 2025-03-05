@@ -1,6 +1,6 @@
-package HolaSpring6CV3.service;
+package SistemaMedico.service;
 
-import HolaSpring6CV3.entity.Usuario;
+import SistemaMedico.entity.Usuario;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
