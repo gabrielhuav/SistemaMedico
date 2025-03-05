@@ -1,4 +1,4 @@
-package HolaSpring6CV3.controller;
+package SistemaMedico.controller;
 
 public class LoginCredentials {
     private String correo;
