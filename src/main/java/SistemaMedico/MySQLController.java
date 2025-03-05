@@ -1,4 +1,4 @@
-package HolaSpring6CV3;
+package SistemaMedico;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class MySQLController {
     // Parámetros de conexión
         private static final String URL =
-        "jdbc:mysql://localhost:3306/practica2?useSSL=false&serverTimezone=UTC";
+        "jdbc:mysql://localhost:3306/SistemaMedico?useSSL=false&serverTimezone=UTC";
         private static final String USER = "admin"; // Usar el nuevo usuario 'admin'
         private static final String PASSWORD = "admin"; // Contraseña 'admin'
         public static void main(String[] args) {
