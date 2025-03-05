@@ -1,6 +1,6 @@
-package HolaSpring6CV3.repository;
+package SistemaMedico.repository;
 
-import HolaSpring6CV3.entity.Usuario;
+import SistemaMedico.entity.Usuario;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
