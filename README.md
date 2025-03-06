@@ -47,6 +47,11 @@ curl -X GET http://localhost:3000/api/pacientes
 
 También puedes importar la colección de Postman incluida en el repositorio para probar las diferentes rutas.
 
+## 📷 Capturas de pruebas con Postman
+A continuación, se deben agregar capturas de pantalla de los endpoints funcionales, como registro y login de usuarios, utilizando Postman o navegadores para solicitudes HTTP exitosas.
+
+_🔹 Agrega aquí las capturas de pantalla de las pruebas realizadas._
+
 ## 📋 Requisitos del entorno
 - **Node.js** >= 14.x
 - **Base de datos**: MySQL o PostgreSQL (según configuración en `.env`)
