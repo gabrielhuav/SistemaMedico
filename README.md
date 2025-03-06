@@ -49,6 +49,8 @@ También puedes importar la colección de Postman incluida en el repositorio par
 
 ## 📷 Capturas de pruebas con Postman
 A continuación, se deben agregar capturas de pantalla de los endpoints funcionales, como registro y login de usuarios, utilizando Postman o navegadores para solicitudes HTTP exitosas.
+![image](https://github.com/user-attachments/assets/5ada42d4-d123-4b21-aee9-30a5a942d621)
+
 
 _🔹 Agrega aquí las capturas de pantalla de las pruebas realizadas._
 
