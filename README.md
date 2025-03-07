@@ -68,12 +68,5 @@ _🔹 Agrega aquí las capturas de pantalla de las pruebas realizadas._
 - **Base de datos**: MySQL o PostgreSQL (según configuración en `.env`)
 - **Herramientas recomendadas**: Postman para pruebas de API, Docker si deseas contenerizar la aplicación.
 
-## 🚀 Contribución
-Si deseas contribuir al proyecto, ¡eres bienvenido! Puedes enviar un *pull request* con mejoras o correcciones.
-
-## 📄 Licencia
-Este proyecto está bajo la licencia MIT. Puedes consultar más detalles en el archivo `LICENSE`.
-
----
 
 📌 *Si tienes dudas o sugerencias, abre un issue en el repositorio.*
