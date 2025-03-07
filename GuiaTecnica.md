@@ -34,7 +34,7 @@ El sistema usa bases de datos relacionales como MySQL o PostgreSQL. Las configur
    DB_PASSWORD=password
    DB_NAME=sistemamedico
 
-###🌱 Configuraciones de Spring Boot
+### 🌱 Configuraciones de Spring Boot
 Si hay componentes basados en Spring Boot, las configuraciones típicas incluirían:
 
   1.- Archivo application.properties o application.yml:
@@ -61,7 +61,7 @@ spring.jpa.hibernate.ddl-auto=update
       <artifactId>mysql-connector-java</artifactId>
   </dependency>
 ```
-###🛠️ Instalación y Configuración
+### 🛠️ Instalación y Configuración
   Clonar el repositorio:
   ```env
   sh
@@ -69,30 +69,34 @@ spring.jpa.hibernate.ddl-auto=update
   cd SistemaMedico
  ```
   Instalar dependencias: Asegúrate de tener instalado las extensiones para Spring boot y npm o yarn.
- 
+ ```env
   sh
   npm install  # o yarn install
+```
 Configurar variables de entorno: Renombra el archivo .env.example a .env y configura las credenciales necesarias como la conexión a la base de datos.
 
 Compilar y ejecutar el proyecto:
-
+```
 sh
 npm run build  # Compilar
 npm start      # Ejecutar
+```
 Para desarrollo, puedes usar:
-
+```
 sh
 npm run dev
-🧪 API y Pruebas
+```
+### 🧪 API y Pruebas
 Levantar el servidor: Ejecuta el proyecto y asegúrate de que el servidor está corriendo en http://localhost:3000 (o el puerto configurado).
 
 Probar las APIs con Postman o cURL: Ejemplo de consulta de pacientes con cURL:
-
+```
 sh
 curl -X GET http://localhost:3000/api/pacientes
+```
 También puedes importar la colección de Postman incluida en el repositorio para probar las diferentes rutas.
 
 🖥️ Requisitos del Entorno
 Node.js >= 14.x
 Base de datos: MySQL o PostgreSQL (según configuración en .env)
-Herramientas recomendadas: Postman para pruebas de API, Docker si deseas contenerizar la aplicación.
+Herramientas recomendadas: Postman para pruebas de API, Docker si deseas contenerizar la aplicación como en nuestro caso.
