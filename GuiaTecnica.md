@@ -1,11 +1,7 @@
 # 📖 Guía Técnica Básica: Sistema Médico
 
 ## 🩺 Descripción General del Sistema
-El Sistema Médico es una aplicación diseñada para gestionar información de pacientes, consultas y personal de salud. Proporciona funcionalidades clave como:
-- **Gestión de pacientes:** Registro, actualización y eliminación de datos.
-- **Administración de consultas:** Agendamiento y seguimiento de citas médicas.
-- **Manejo de personal médico:** Registro y gestión de información de doctores y enfermeros.
-- **APIs RESTful:** Para interactuar con el sistema de manera programática.
+Este proyecto es una implementación de un sistema médico, con la administración de pacientes y doctores.
 
 ## 🔒 Implementación Técnica
 
