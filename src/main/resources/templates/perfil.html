@@ -7,7 +7,8 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
+            background: url('https://img.freepik.com/vector-gratis/vector-fondo-medico-limpio_53876-143675.jpg') no-repeat center center fixed;
+            background-size: cover;
             margin: 0;
             padding: 0;
             display: flex;
@@ -201,7 +202,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>Sistema de Recomendaciones</h1>
+        <h1>Mi Perfil</h1>
     </div>
     
     <div class="container">
@@ -210,15 +211,15 @@
         <div class="profile-header">
             <div class="profile-image">
                 <!-- Si el usuario tiene imagen, mostrarla -->
-                <img th:if="${tieneImagen}" th:src="@{'/usuario/imagen/' + ${id}}" id="profileImage" alt="Foto de perfil" />
+                <img th:if="${tieneImagen}" th:src="@{'/usuario/imagen/' + ${id}}" id="profileImage" />
                 <!-- Si no tiene imagen, mostrar icono por defecto -->
-                <span th:unless="${tieneImagen}">👤</span>
+                <span th:unless="${tieneImagen}">.</span>
                 
                 <!-- Botón para cambiar la imagen -->
                 <label for="fileInput" class="profile-image-upload">+</label>
                 <input type="file" id="fileInput" accept="image/*" class="hidden" />
             </div>
-            <p class="profile-name" th:text="${nombre}">Usuario</p>
+            <p class="profile-name" th:text="${nombre}">Paciente</p>
             <p class="profile-email" th:text="${email}">usuario@ejemplo.com</p>
         </div>
         
