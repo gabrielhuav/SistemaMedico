@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Recomendaciones</title>
+    <title>Sistema Médico</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
+            background: url('https://previews.123rf.com/images/elenavdovina/elenavdovina1705/elenavdovina170500025/78423004-medicina-fondo-blanco-transparente-vector-especializaci%C3%B3n-de-servicios-m%C3%A9dicos-la-profesi%C3%B3n-de.jpg') no-repeat center center fixed;
+            background-size: cover;
             margin: 0;
             padding: 0;
             display: flex;
@@ -17,7 +18,7 @@
         }
         
         .header {
-            background-color: #1a237e;
+            background-color: #0077b6;
             color: white;
             width: 100%;
             padding: 1rem 0;
@@ -26,8 +27,8 @@
         }
         
         .container {
-            background-color: white;
-            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             padding: 2rem;
             margin-top: 3rem;
@@ -38,11 +39,11 @@
         
         h1 {
             margin-bottom: 0.5rem;
-            color: #ffffff;
+            color: white;
         }
         .container h1 {
             margin-bottom: 0.5rem;
-            color: #000000;
+            color: #0077b6;
         }
         
         .welcome-message {
@@ -60,7 +61,7 @@
         }
         
         .menu-button {
-            background-color: #3f51b5;
+            background-color: #0096c7;
             color: white;
             border: none;
             border-radius: 8px;
@@ -73,14 +74,14 @@
         }
         
         .menu-button:hover {
-            background-color: #303f9f;
+            background-color: #023e8a;
             transform: scale(1.05);
         }
         
         .logout {
             margin-top: 2rem;
             padding: 0.75rem 2rem;
-            background: rgba(63, 81, 181, 0.8);
+            background: rgba(0, 119, 182, 0.8);
             color: white;
             border: none;
             border-radius: 8px;
@@ -91,26 +92,26 @@
         }
         
         .logout:hover {
-            background: rgba(48, 63, 159, 1);
+            background: rgba(2, 62, 138, 1);
             transform: scale(1.05);
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Sistema de Recomendaciones</h1>
+        <h1>Sistema Médico</h1>
     </div>
     
     <div class="container">
         <h1>Bienvenido</h1>
-        <p class="welcome-message"> "<span th:text="${nombreUsuario}" style="color: #1a237e; font-size: 55px;">Usuario</span>" c:</p>
+        <p class="welcome-message"> "<span th:text="${nombreUsuario}" style="color: #0077b6; font-size: 55px;">Paciente</span>"</p>
         
         <div class="menu-options">
-            <a href="/libros" class="menu-button">Libros</a>
-            <a href="/peliculas" class="menu-button">Películas</a>
+            <a href="/consultas" class="menu-button">Consultas</a>
+            <a href="/calendario" class="menu-button">Calendario</a>
             <a href="/perfil" class="menu-button">Mi Perfil</a>
 
-            <!-- Agregar la opción de Administrado solo si es admin -->
+            <!-- Agregar la opción de Administrador solo si es admin -->
             <a href="/admin" th:if="${isAdmin}" class="menu-button">Administrador</a>
         </div>
         
