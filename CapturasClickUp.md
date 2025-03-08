@@ -9,5 +9,5 @@
 ## Solis Lugo Mayra
 ![image](https://github.com/user-attachments/assets/a062709b-6bff-447a-9a62-ede7aae1f712)
 
-## Salauz HErnandez Nerick Francisco
+## Salauz Hernandez Nerick Francisco
 ![Image](https://github.com/user-attachments/assets/957159eb-ffe2-4c72-8415-f9616067dc82)
