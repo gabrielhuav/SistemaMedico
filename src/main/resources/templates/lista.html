@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Pacientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+        }
+        
+        .container {
+            width: 80%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #0096c7;
+            color: white;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            margin: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 5px;
+        }
+
+        .btn-edit { background-color: #ffcc00; }
+        .btn-delete { background-color: #e63946; }
+        .btn-back { background-color: #0077b6; }
+        
+        .btn:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Lista de Pacientes</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Género</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="paciente : ${pacientes}">
+                    <td th:text="${paciente.nombre}"></td>
+                    <td th:text="${paciente.apellidos}"></td>
+                    <td th:text="${paciente.fechaNacimiento}"></td>
+                    <td th:text="${paciente.genero}"></td>
+                    <td th:text="${paciente.telefono}"></td>
+                    <td>
+                        <a th:href="@{/pacientes/editar/{id}(id=${paciente.id})}" class="btn btn-edit">Editar</a>
+                        <a th:href="@{/pacientes/eliminar/{id}(id=${paciente.id})}" class="btn btn-delete" onclick="return confirm('¿Seguro que deseas eliminar este paciente?');">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="/pacientes/admin" class="btn btn-back">Registrar Nuevo Paciente</a>
+        <a href="/pacientes/admin" class="btn btn-back">Regresar</a>
+
+    </div>
+</body>
+</html>
