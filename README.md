@@ -58,10 +58,8 @@ DELETE
 
 
 
+## 📷 Capturas de Clickup
 
-
-
-_🔹 Agrega aquí las capturas de pantalla de las pruebas realizadas._
 
 ## 📋 Requisitos del entorno
 - **Node.js** >= 14.x
