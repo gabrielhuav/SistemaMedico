@@ -11,3 +11,6 @@
 
 ## Salauz Hernandez Nerick Francisco
 ![Image](https://github.com/user-attachments/assets/957159eb-ffe2-4c72-8415-f9616067dc82)
+
+## Hernández Mejia Alvaro
+![Tarea_Documento_FURPS](https://github.com/user-attachments/assets/3dfed159-f1aa-4794-9799-f731ab230b9f)
