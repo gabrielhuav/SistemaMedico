@@ -1,0 +1,94 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Médico" as Medico
+actor "Paciente" as Paciente
+actor "Administrador" as Admin
+actor "Sistema de Autenticación" as AuthSystem
+
+rectangle "Sistema Médico" {
+    
+    usecase "Autenticación de Usuario" as CU01
+    usecase "Validación de Credenciales" as CU01a
+    usecase "Autenticación de Dos Factores" as CU01b
+    
+    usecase "Gestión de Pacientes" as CU02
+    usecase "Registrar Paciente" as CU02a
+    usecase "Editar Paciente" as CU02b
+    usecase "Consultar Paciente" as CU02c
+    
+    usecase "Consultas Médicas" as CU03
+    usecase "Registrar Consulta" as CU03a
+    usecase "Editar Consulta" as CU03b
+    usecase "Consultar Historial Médico" as CU03c
+    
+    usecase "Solicitudes de Ausencias" as CU04
+    usecase "Registrar Solicitud" as CU04a
+    usecase "Revisar Solicitud" as CU04b
+
+    usecase "Sistema de Avisos" as CU05
+    
+    usecase "Chat y Tickets" as CU06
+    usecase "Crear Ticket" as CU06a
+    usecase "Gestionar Ticket" as CU06b
+    usecase "Seguimiento de Ticket" as CU06c
+    
+    usecase "Cumplimiento Normativo" as CU07
+    usecase "Generar Reporte de Auditoría" as CU07a
+    
+    usecase "Consentimiento Informado" as CU08
+    usecase "Subir Consentimiento" as CU08a
+    usecase "Visualizar Consentimiento" as CU08b
+    
+    usecase "Integración con Dispositivos Médicos" as CU09
+    usecase "Importar Signos Vitales" as CU09a
+    
+    usecase "Seguridad del Sistema" as CU10
+    usecase "Cifrado de Contraseñas" as CU10a
+    usecase "Recuperación de Cuenta" as CU10b
+
+    CU01 --> CU01a : <<include>>
+    CU01 --> CU01b : <<include>>
+
+    CU02 --> CU02a : <<include>>
+    CU02 --> CU02b : <<include>>
+    CU02 --> CU02c : <<include>>
+
+    CU03 --> CU03a : <<include>>
+    CU03 --> CU03b : <<include>>
+    CU03 --> CU03c : <<include>>
+
+    CU04 --> CU04a : <<include>>
+    CU04 --> CU04b : <<include>>
+
+    CU06 --> CU06a : <<include>>
+    CU06 --> CU06b : <<include>>
+    CU06 --> CU06c : <<include>>
+
+    CU07 --|> CU07a : <<extend>>
+    CU09 --|> CU09a : <<extend>>
+
+    CU10 --> CU10a : <<include>>
+    CU10 --> CU10b : <<include>>
+    
+    Medico --> CU01
+    Medico --> CU02
+    Medico --> CU03
+    Medico --> CU04
+    Medico --> CU06
+    Medico --> CU08
+
+    Paciente --> CU01
+    Paciente --> CU05
+    Paciente --> CU06
+    Paciente --> CU08
+
+    Admin --> CU01
+    Admin --> CU07
+    Admin --> CU10
+
+    AuthSystem --> CU01 : <<include>>
+
+}
+@enduml
