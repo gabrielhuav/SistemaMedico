@@ -74,7 +74,7 @@ public class ApiAuthController {
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usuario eliminado exitosamente");
+            return ResponseEntity.status(HttpStatus.OK).body("Usuario eliminado exitosamente");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
         }
