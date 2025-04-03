@@ -1,5 +1,3 @@
-
-
 DROP DATABASE IF EXISTS sistemamedico;
 CREATE DATABASE sistemamedico CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE sistemamedico;
@@ -10,6 +8,7 @@ CREATE TABLE usuarios (
     email VARCHAR(64) NOT NULL UNIQUE,
     password VARCHAR(128) NOT NULL
 );
+
 CREATE TABLE roles (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(64) NOT NULL UNIQUE
@@ -23,10 +22,43 @@ CREATE TABLE usuario_roles (
     FOREIGN KEY (rol_id) REFERENCES roles(id)
 );
 
+-- Tabla de citas
+CREATE TABLE citas (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id_paciente BIGINT NOT NULL,
+    id_doctor BIGINT NOT NULL,
+    fecha_hora DATETIME NOT NULL,
+    motivo TEXT,
+    estado ENUM('pendiente', 'confirmada', 'cancelada') DEFAULT 'pendiente',
+    FOREIGN KEY (id_paciente) REFERENCES usuarios(id),
+    FOREIGN KEY (id_doctor) REFERENCES usuarios(id)
+);
 
-INSERT INTO roles (nombre) VALUES ('ROLE_ADMIN'), ('ROLE_USER');
+-- Tabla de historial médico
+CREATE TABLE historial_medico (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id_paciente BIGINT NOT NULL,
+    id_doctor BIGINT NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    descripcion TEXT NOT NULL,
+    prescripciones TEXT,
+    FOREIGN KEY (id_paciente) REFERENCES usuarios(id),
+    FOREIGN KEY (id_doctor) REFERENCES usuarios(id)
+);
 
+-- Tabla de mensajes para el chat
+CREATE TABLE mensajes_chat (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id_emisor BIGINT NOT NULL,
+    id_receptor BIGINT NOT NULL,
+    mensaje TEXT NOT NULL,
+    fecha_envio DATETIME DEFAULT CURRENT_TIMESTAMP,
+    leido BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (id_emisor) REFERENCES usuarios(id),
+    FOREIGN KEY (id_receptor) REFERENCES usuarios(id)
+);
 
+INSERT INTO roles (nombre) VALUES ('ROLE_ADMIN'), ('ROLE_USER'), ('ROLE_DOCTOR');
 DROP USER IF EXISTS 'admin'@'localhost';
 FLUSH PRIVILEGES;
 
@@ -34,6 +66,15 @@ CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
 GRANT ALL PRIVILEGES ON sistemamedico.* TO 'admin'@'localhost';
 FLUSH PRIVILEGES;
 
+-- Insertar usuarios doctores
+INSERT INTO usuarios (nombre, email, password) VALUES
+('Dr. Juan Pérez', 'juan.perez@hospital.com', 'hashed_password_1'),
+('Dra. María López', 'maria.lopez@hospital.com', 'hashed_password_2'),
+('Dr. Carlos García', 'carlos.garcia@hospital.com', 'hashed_password_3');
 
-SELECT * FROM usuarios;
-
+-- Asignar el rol de doctor a los usuarios insertados usando el email
+INSERT INTO usuario_roles (usuario_id, rol_id)
+SELECT u.id, r.id
+FROM usuarios u, roles r
+WHERE u.email IN ('juan.perez@hospital.com', 'maria.lopez@hospital.com', 'carlos.garcia@hospital.com')
+  AND r.nombre = 'ROLE_DOCTOR';
