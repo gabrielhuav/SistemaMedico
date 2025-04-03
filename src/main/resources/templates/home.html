@@ -136,7 +136,7 @@
     <div class="container">
         <div class="hero-section">
             <h1>Bienvenido al Sistema Médico</h1>
-            <p>Gestiona tus consultas, calendario y perfil de manera eficiente.</p>
+            <p>Gestiona tus citas, calendario y perfil de manera eficiente.</p>
         </div>
     </div>
 
@@ -145,7 +145,7 @@
         <div class="card p-4">
             <h2 class="text-center">Hola, <span th:text="${nombreUsuario}" style="color: #00796b;">Paciente</span></h2>
             <div class="d-flex justify-content-center flex-wrap gap-3 mt-4">
-                <a href="/consultas" class="btn btn-primary">Consultas</a>
+                <a href="/citas" class="btn btn-primary">Citas</a>
                 <a href="/calendario" class="btn btn-primary">Calendario</a>
                 <a href="/perfil" class="btn btn-primary">Mi Perfil</a>
                 <a href="/admin" th:if="${isAdmin}" class="btn btn-primary">Administrador</a>
