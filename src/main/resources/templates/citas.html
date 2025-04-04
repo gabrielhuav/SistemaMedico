@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendar Cita</title>
+    <title>Lista de Citas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
             background-color: #f4f4f9;
         }
         .container {
-            max-width: 600px;
+            max-width: 900px;
             margin: 50px auto;
             background: #fff;
             padding: 20px;
@@ -22,70 +22,101 @@
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 20px;
         }
-        label {
-            display: block;
-            margin: 15px 0 5px;
-            font-weight: bold;
-        }
-        input, select, button {
+        table {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        button {
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        table th {
             background-color: #007bff;
             color: white;
-            font-size: 16px;
-            cursor: pointer;
         }
-        button:hover {
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 10px 0;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .btn:hover {
             background-color: #0056b3;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #a71d2a;
+        }
+        .message {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Agendar Cita</h1>
-        <form id="formCita" action="/citas/agendar" method="POST">
-            <!-- Campo oculto para el ID del usuario (de la sesión) -->
-            <input type="hidden" name="id_paciente" value="<!-- ID del usuario de la sesión -->">
+        <h1>Lista de Citas</h1>
 
-            <!-- Selección del doctor -->
-            <label for="id_doctor">Selecciona un doctor:</label>
-            <select name="id_doctor" id="id_doctor" required>
-                <!-- Estos valores deben ser generados dinámicamente desde la base de datos -->
-                <option value="1">Dr. Juan Pérez</option>
-                <option value="2">Dra. María López</option>
-                <option value="3">Dr. Carlos García</option>
-            </select>
+        <!-- Mensajes de éxito o error -->
+        <div th:if="${mensaje}" th:text="${mensaje}" class="message success"></div>
+        <div th:if="${error}" th:text="${error}" class="message error"></div>
 
-            <!-- Selección de la fecha -->
-            <label for="fecha">Selecciona la fecha:</label>
-            <input type="date" name="fecha" id="fecha" required min="<!-- Fecha actual -->">
+        <!-- Botón para agendar nueva cita -->
+        <a href="/citas/agendar" class="btn">Agendar Nueva Cita</a>
 
-            <!-- Selección de la hora -->
-            <label for="hora">Selecciona la hora:</label>
-            <input type="time" name="hora" id="hora" required>
-
-            <!-- Motivo de la cita -->
-            <label for="motivo">Motivo de la cita:</label>
-            <textarea name="motivo" id="motivo" rows="4" placeholder="Describe brevemente el motivo de la cita" required></textarea>
-
-            <!-- Botón para enviar -->
-            <button type="submit">Agendar Cita</button>
-        </form>
+        <!-- Tabla de citas -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Paciente</th>
+                    <th>Doctor</th>
+                    <th>Fecha y Hora</th>
+                    <th>Motivo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Generar dinámicamente las citas desde el backend -->
+                <tr th:each="cita : ${citas}">
+                    <td th:text="${cita.id}"></td>
+                    <td th:text="${cita.idPaciente}"></td>
+                    <td th:text="${cita.idDoctor}"></td>
+                    <td th:text="${#temporals.format(cita.fechaHora, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${cita.motivo}"></td>
+                    <td>
+                        <a th:href="@{'/citas/editar/' + ${cita.id}}" class="btn">Editar</a>
+                        <a th:href="@{'/citas/eliminar/' + ${cita.id}}" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+                <!-- Mostrar mensaje si no hay citas -->
+                <tr th:if="${#lists.isEmpty(citas)}">
+                    <td colspan="6" style="text-align: center;">No hay citas registradas.</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-    <script>
-        // Configuración para establecer la fecha mínima como la fecha actual
-        const fechaInput = document.getElementById('fecha');
-        const hoy = new Date().toISOString().split('T')[0];
-        fechaInput.setAttribute('min', hoy);
-    </script>
-
-    
 </body>
 </html>
