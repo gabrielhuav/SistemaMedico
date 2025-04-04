@@ -23,7 +23,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Controller
 public class AdminController {
-    private final String API_URL = "http://localhost:8085/api";  // URL de la API (ajusta según tu configuración)
+    private final String API_URL = "http://localhost:8086/api";  // URL de la API (ajusta según tu configuración)
     @Autowired
     private RestTemplate restTemplate;
 
