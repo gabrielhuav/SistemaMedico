@@ -17,11 +17,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import SistemaMedico.entity.Cita;
 import SistemaMedico.entity.Rol;
 import SistemaMedico.entity.Usuario;
+import SistemaMedico.repository.CitaRepository;
 import SistemaMedico.repository.UsuarioRepository;
 import SistemaMedico.service.CustomUserDetailsService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class ApiAuthController {
@@ -36,6 +41,9 @@ public class ApiAuthController {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CitaRepository citaRepository;
     
 
     @GetMapping("/")
@@ -102,6 +110,35 @@ public ResponseEntity<String> toggleAdminRole(@PathVariable Long id) {
         return ResponseEntity.ok("Rol de admin actualizado");
     }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado"));
 }
-
+   @PostMapping("/citas")
+   public ResponseEntity<String> crearCita(@RequestBody Cita cita) {
+       try {
+           // Validar que el paciente y el doctor existan
+           if (cita.getIdPaciente() == null || cita.getIdDoctor() == null) {
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El ID del paciente y del doctor son obligatorios");
+           }
+   
+           Optional<Usuario> paciente = userRepository.findById(cita.getIdPaciente());
+           Optional<Usuario> doctor = userRepository.findById(cita.getIdDoctor());
+   
+           if (paciente.isEmpty() || doctor.isEmpty()) {
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Paciente o doctor no encontrado");
+           }
+   
+           // Validar el formato de fecha y hora
+           if (cita.getFechaHora() == null) {
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La fecha y hora son obligatorias");
+           }
+   
+           // Guardar la cita
+           cita.setEstado("pendiente");
+           citaRepository.save(cita);
+   
+           return ResponseEntity.status(HttpStatus.CREATED).body("Cita creada exitosamente");
+       } catch (Exception e) {
+           e.printStackTrace();
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear la cita");
+       }
+   }
     
 }
