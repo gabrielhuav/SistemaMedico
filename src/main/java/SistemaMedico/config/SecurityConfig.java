@@ -23,6 +23,8 @@ public class SecurityConfig {
             .requestMatchers("/perfil").authenticated()
            // .requestMatchers("/admin/eliminar/**").hasRole("ADMIN")  // Permite que los usuarios autenticados puedan eliminar registros
             .requestMatchers("/home").authenticated()  // Requiere autenticación para acceder a /home
+            .requestMatchers("/consultas/registrar").hasRole("DOCTOR")  // Solo los doctores pueden registrar consultas
+            .requestMatchers("/consultas/paciente/**").hasRole("PACIENTE")  // Solo los pacientes pueden ver sus consultas
                 .anyRequest().permitAll()
             )
             .formLogin((form) -> form
