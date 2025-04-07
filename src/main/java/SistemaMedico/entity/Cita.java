@@ -1,6 +1,7 @@
 package SistemaMedico.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,6 +26,9 @@ public class Cita {
 
     @Column(name = "estado", nullable = false)
     private String estado;
+
+    @Column(name = "fecha_proxima_cita") // Nueva columna
+    private LocalDate fechaProximaCita;
 
     // Getters y Setters
     public Long getId() {
@@ -73,5 +77,13 @@ public class Cita {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public LocalDate getFechaProximaCita() {
+        return fechaProximaCita;
+    }
+
+    public void setFechaProximaCita(LocalDate fechaProximaCita) {
+        this.fechaProximaCita = fechaProximaCita;
     }
 }
