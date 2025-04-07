@@ -158,10 +158,11 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Paciente</th>
-                    <th>Doctor</th>
+                    <th th:if="${!isDoctor}">Doctor</th>
+                      <th th:if="${isDoctor}">Paciente</th>
                     <th>Fecha y Hora</th>
                     <th>Motivo</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -169,13 +170,17 @@
                 <!-- Generar dinámicamente las citas desde el backend -->
                 <tr th:each="cita : ${citas}">
                     <td th:text="${cita.id}"></td>
-                    <td th:text="${cita.idPaciente}"></td>
-                    <td th:text="${cita.idDoctor}"></td>
+                    <!-- Mostrar el nombre del paciente si el usuario es doctor -->
+                    <td th:if="${isDoctor}" th:text="${nombres[cita.idPaciente]}"></td>
+                    <!-- Mostrar el nombre del doctor si el usuario no es doctor -->
+                    <td th:if="${!isDoctor}" th:text="${nombres[cita.idDoctor]}"></td>
                     <td th:text="${#temporals.format(cita.fechaHora, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${cita.motivo}"></td>
+                    <td th:text="${cita.estado}"></td>
                     <td>
                         <!-- <a th:href="@{'/citas/editar/' + ${cita.id}}" class="btn">Editar</a> -->
                         <a th:href="@{'/citas/eliminar/' + ${cita.id}}" class="btn btn-danger">Eliminar</a>
+                        <a th:if="${isDoctor}" th:href="@{'/consultas/agregar/' + ${cita.id}}" class="btn btn-primary">Agregar Consulta</a>
                     </td>
                 </tr>
                 <!-- Mostrar mensaje si no hay citas -->
