@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Consulta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, textarea, select, button {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Agregar Consulta</h1>
+        <form action="/consultas/guardar" method="POST">
+            <!-- Campo oculto para el ID de la cita -->
+            <input type="hidden" name="idCita" th:value="${idCita}">
+
+            <!-- Campo para los síntomas -->
+            <label for="sintomas">Síntomas:</label>
+            <textarea id="sintomas" name="sintomas" rows="4" required></textarea>
+
+            <!-- Campo para los medicamentos -->
+            <label for="medicamentos">Medicamentos:</label>
+            <textarea id="medicamentos" name="medicamentos" rows="4"></textarea>
+
+            <!-- Campo para la dosis -->
+            <label for="dosis">Dosis:</label>
+            <textarea id="dosis" name="dosis" rows="2"></textarea>
+
+            <!-- Campo para la fecha de la próxima cita -->
+            <label for="fechaProximaCita">Fecha de la Próxima Cita:</label>
+            <input type="date" id="fechaProximaCita" name="fechaProximaCita">
+
+            <!-- Botón para guardar -->
+            <button type="submit">Guardar Consulta</button>
+        </form>
+    </div>
+</body>
+</html>
