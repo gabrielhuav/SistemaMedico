@@ -33,6 +33,20 @@ CREATE TABLE citas (
     FOREIGN KEY (id_paciente) REFERENCES usuarios(id),
     FOREIGN KEY (id_doctor) REFERENCES usuarios(id)
 );
+-- Tabla de consultas
+CREATE TABLE consultas (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id_paciente BIGINT NOT NULL,
+    id_doctor BIGINT NOT NULL,
+    fecha_hora DATETIME NOT NULL,
+    sintomas TEXT NOT NULL,
+    medicamentos TEXT,
+    dosis TEXT,
+    estado ENUM('pendiente', 'confirmada', 'cancelada') DEFAULT 'pendiente',
+    fecha_proxima_cita DATE,
+    FOREIGN KEY (id_paciente) REFERENCES usuarios(id),
+    FOREIGN KEY (id_doctor) REFERENCES usuarios(id)
+);
 
 -- Tabla de historial médico
 CREATE TABLE historial_medico (
@@ -73,6 +87,15 @@ INSERT INTO usuarios (nombre, email, password) VALUES
 ('Dr. Carlos García', 'carlos.garcia@hospital.com', 'hashed_password_3');
 
 -- Asignar el rol de doctor a los usuarios insertados usando el email
+SELECT * FROM usuarios;
+SELECT * FROM roles;
+SELECT * FROM usuario_roles;
+SELECT * FROM citas;
+SELECT * FROM historial_medico;
+SELECT * FROM mensajes_chat;
+INSERT INTO usuario_roles (usuario_id, rol_id)
+VALUES (5, 3);
+ALTER TABLE citas ADD COLUMN fecha_proxima_cita DATE;
 INSERT INTO usuario_roles (usuario_id, rol_id)
 SELECT u.id, r.id
 FROM usuarios u, roles r
