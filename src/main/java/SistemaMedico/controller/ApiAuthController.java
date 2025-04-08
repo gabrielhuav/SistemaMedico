@@ -1,5 +1,7 @@
 package SistemaMedico.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,12 +22,9 @@ import SistemaMedico.entity.Cita;
 import SistemaMedico.entity.Rol;
 import SistemaMedico.entity.Usuario;
 import SistemaMedico.repository.CitaRepository;
+import SistemaMedico.repository.RolRepository;
 import SistemaMedico.repository.UsuarioRepository;
 import SistemaMedico.service.CustomUserDetailsService;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class ApiAuthController {
@@ -44,6 +42,9 @@ public class ApiAuthController {
 
     @Autowired
     private CitaRepository citaRepository;
+
+    @Autowired
+private RolRepository rolRepository;
     
 
     @GetMapping("/")
@@ -93,23 +94,7 @@ public class ApiAuthController {
         Iterable<Usuario> users = userRepository.findAll();
         return ResponseEntity.ok(users);
     }
-    @PutMapping("/users/{id}/toggle-admin")
-public ResponseEntity<String> toggleAdminRole(@PathVariable Long id) {
-    return userRepository.findById(id).map(user -> {
-        boolean isAdmin = user.getRoles().stream().anyMatch(rol -> rol.getNombre().equals("ROLE_ADMIN"));
-        Rol adminRole = new Rol();
-        adminRole.setNombre("ROLE_ADMIN");
-
-        if (isAdmin) {
-            user.getRoles().removeIf(rol -> rol.getNombre().equals("ROLE_ADMIN"));
-        } else {
-            user.getRoles().add(adminRole);
-        }
-
-        userRepository.save(user);
-        return ResponseEntity.ok("Rol de admin actualizado");
-    }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado"));
-}
+    
    @PostMapping("/citas")
    public ResponseEntity<String> crearCita(@RequestBody Cita cita) {
        try {
@@ -140,5 +125,60 @@ public ResponseEntity<String> toggleAdminRole(@PathVariable Long id) {
            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear la cita");
        }
    }
+
+   @PostMapping("/users/{id}/toggle-admin")
+   public ResponseEntity<String> toggleAdminRole(@PathVariable Long id) {
+       return userRepository.findById(id).map(user -> {
+           // Usar la instancia inyectada de RolRepository
+           Rol adminRole = rolRepository.findByNombre("ROLE_ADMIN")
+                   .orElseGet(() -> {
+                       Rol newRole = new Rol();
+                       newRole.setNombre("ROLE_ADMIN");
+                       return rolRepository.save(newRole); // Guardar el rol si no existe
+                   });
+   
+           // Verificar si el usuario ya tiene el rol
+           boolean isAdmin = user.getRoles().stream().anyMatch(rol -> rol.getNombre().equals("ROLE_ADMIN"));
+   
+           if (isAdmin) {
+               // Quitar el rol de administrador
+               user.getRoles().removeIf(rol -> rol.getNombre().equals("ROLE_ADMIN"));
+           } else {
+               // Agregar el rol de administrador
+               user.getRoles().add(adminRole);
+           }
+   
+           userRepository.save(user);
+           return ResponseEntity.ok("Rol de admin actualizado");
+       }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado"));
+   }
+   
+   @PostMapping("/users/{id}/toggle-doctor")
+   public ResponseEntity<String> toggleDoctorRole(@PathVariable Long id) {
+       return userRepository.findById(id).map(user -> {
+           // Usar la instancia inyectada de RolRepository
+           Rol doctorRole = rolRepository.findByNombre("ROLE_DOCTOR")
+                   .orElseGet(() -> {
+                       Rol newRole = new Rol();
+                       newRole.setNombre("ROLE_DOCTOR");
+                       return rolRepository.save(newRole); // Guardar el rol si no existe
+                   });
+   
+           // Verificar si el usuario ya tiene el rol
+           boolean isDoctor = user.getRoles().stream().anyMatch(rol -> rol.getNombre().equals("ROLE_DOCTOR"));
+   
+           if (isDoctor) {
+               // Quitar el rol de doctor
+               user.getRoles().removeIf(rol -> rol.getNombre().equals("ROLE_DOCTOR"));
+           } else {
+               // Agregar el rol de doctor
+               user.getRoles().add(doctorRole);
+           }
+   
+           userRepository.save(user);
+           return ResponseEntity.ok("Rol de doctor actualizado");
+       }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado"));
+   }
+   
     
 }
