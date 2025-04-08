@@ -1,11 +1,48 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración</title>
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .table {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .table.dark-mode {
+            background-color: #1e272e;
+            color: #ffffff;
+        }
+
+        .btn {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .btn.dark-mode {
+            background-color: #37474f;
+            color: #ffffff;
+        }
+
+        .btn.dark-mode:hover {
+            background-color: #455a64;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
@@ -49,19 +86,26 @@
                         <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre}" class="badge bg-info me-1"></span>
                     </td>
                     <td>
-                        <form th:action="@{'/api/users/' + ${usuario.id} + '/toggle-admin'}" method="post" style="display:inline;">
-                            <input type="hidden" name="_method" value="PUT">
-                            <button type="submit" class="btn btn-warning">
-                                <span th:text="${usuario.roles.contains('ROLE_ADMIN') ? 'Quitar Admin' : 'Hacer Admin'}"></span>
-                            </button>
-                        </form>
-                        <form th:action="@{'/api/users/' + ${usuario.id} + '/toggle-doctor'}" method="post" style="display:inline;">
-                            <input type="hidden" name="_method" value="PUT">
-                            <button type="submit" class="btn btn-success">
-                                <span th:text="${usuario.roles.contains('ROLE_DOCTOR') ? 'Quitar Doctor' : 'Hacer Doctor'}"></span>
-                            </button>
-                        </form>
-                        <button th:onclick="'deleteUser(' + ${usuario.id} + ')'" class="btn btn-danger">Eliminar</button>
+                        <!-- Botón para cambiar a Admin -->
+                        <button 
+                            class="btn btn-warning" 
+                            th:onclick="'confirmRoleChange(event, \'Admin\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-admin\')'">
+                            <span th:text="${usuario.roles.contains('ROLE_ADMIN') ? 'Quitar Admin' : 'Hacer Admin'}"></span>
+                        </button>
+
+                        <!-- Botón para cambiar a Doctor -->
+                        <button 
+                            class="btn btn-success" 
+                            th:onclick="'confirmRoleChange(event, \'Doctor\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-doctor\')'">
+                            <span th:text="${usuario.roles.contains('ROLE_DOCTOR') ? 'Quitar Doctor' : 'Hacer Doctor'}"></span>
+                        </button>
+
+                        <!-- Botón para eliminar -->
+                        <button 
+                            class="btn btn-danger" 
+                            th:onclick="'deleteUser(' + ${usuario.id} + ')'">
+                            Eliminar
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -72,21 +116,121 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function deleteUser(id) {
-            if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-                fetch(`/api/users/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' }
-                }).then(response => {
-                    if (response.ok) {
-                        window.location.href = "/admin";
-                    } else {
-                        alert("Error al eliminar el usuario.");
-                    }
-                }).catch(error => {
-                    alert("Error en la solicitud: " + error);
-                });
-            }
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/api/users/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' }
+                    }).then(response => {
+                        if (response.ok) {
+                            Swal.fire(
+                                '¡Eliminado!',
+                                'El usuario ha sido eliminado.',
+                                'success'
+                            ).then(() => {
+                                location.reload(); // Recargar la página
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error',
+                                'Hubo un problema al eliminar el usuario.',
+                                'error'
+                            );
+                        }
+                    }).catch(error => {
+                        Swal.fire(
+                            'Error',
+                            'No se pudo completar la solicitud.',
+                            'error'
+                        );
+                    });
+                }
+            });
         }
+
+        function confirmRoleChange(event, role, userId, actionUrl) {
+            event.preventDefault(); // Evitar el envío del formulario
+            Swal.fire({
+                title: `¿Estás seguro?`,
+                text: `¿Deseas cambiar el rol a ${role}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, cambiar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Realizar la solicitud con fetch
+                    fetch(actionUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    }).then(response => {
+                        if (response.ok) {
+                            Swal.fire(
+                                '¡Éxito!',
+                                `El rol de ${role} ha sido actualizado.`,
+                                'success'
+                            ).then(() => {
+                                location.reload(); // Recargar la página para reflejar los cambios
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error',
+                                'Hubo un problema al actualizar el rol.',
+                                'error'
+                            );
+                        }
+                    }).catch(error => {
+                        Swal.fire(
+                            'Error',
+                            'No se pudo completar la solicitud.',
+                            'error'
+                        );
+                    });
+                }
+            });
+        }
+
+        // Modo oscuro con localStorage
+        const body = document.body;
+        const table = document.querySelector('.table');
+
+        // Crear botón de cambio de tema
+        const themeToggle = document.createElement('button');
+        themeToggle.textContent = '🌙';
+        themeToggle.style.position = 'absolute';
+        themeToggle.style.top = '10px';
+        themeToggle.style.right = '10px';
+        themeToggle.style.background = 'none';
+        themeToggle.style.border = 'none';
+        themeToggle.style.fontSize = '1.5rem';
+        themeToggle.style.cursor = 'pointer';
+        document.body.appendChild(themeToggle);
+
+        // Cargar estado del modo oscuro desde localStorage
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            table.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        // Alternar modo oscuro y guardar estado en localStorage
+        themeToggle.addEventListener('click', () => {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            table.classList.toggle('dark-mode');
+            themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        });
     </script>
 </body>
 </html>
