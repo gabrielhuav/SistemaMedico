@@ -14,65 +14,52 @@ import org.springframework.web.client.RestTemplate;
 
 import SistemaMedico.entity.Rol;
 import SistemaMedico.entity.Usuario;
-import SistemaMedico.repository.UsuarioRepository;
 import SistemaMedico.repository.RolRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import SistemaMedico.repository.UsuarioRepository;
 
 @Controller
 public class AdminController {
     private final String API_URL = "http://localhost:8086/api";  // URL de la API (ajusta según tu configuración)
+
     @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
-private UsuarioRepository userRepository;
+    private UsuarioRepository userRepository;
 
-@Autowired
-private RolRepository roleRepository;
+    @Autowired
+    private RolRepository roleRepository;
 
     @GetMapping("/admin")
     public String adminPage(Authentication authentication, Model model) {
-        System.out.println("Usuario autenticado: " + authentication.getName());
-        System.out.println("Roles del usuario: " + authentication.getAuthorities());
-
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            System.out.println("Acceso concedido: Usuario es admin");
-
             ResponseEntity<Usuario[]> response = restTemplate.getForEntity(API_URL + "/users", Usuario[].class);
             model.addAttribute("usuarios", response.getBody());
             return "admin";  // Vista para administrador
         } else {
-            System.out.println("Acceso denegado: Usuario no es admin");
             return "accessDenied";  // Vista si no es admin
         }
     }
 
     @PostMapping("/admin/users")
     public String addUser(@ModelAttribute Usuario usuario) {
-        // Enviar usuario a la API para ser registrado
         restTemplate.postForObject(API_URL + "/register", usuario, String.class);
         return "redirect:/admin";
     }
 
     @PostMapping("/admin/users/{id}/delete")
     public String deleteUser(@PathVariable Long id) {
-        // Lógica para eliminar un usuario a través de la API
         restTemplate.delete(API_URL + "/users/" + id);
         return "redirect:/admin";
     }
+
     @PostMapping("/admin/users/{id}/toggle-admin")
     public String toggleAdmin(@PathVariable Long id) {
         Usuario usuario = userRepository.findById(id).orElse(null);
-        
         if (usuario != null) {
             if (usuario.getRoles().stream().anyMatch(rol -> rol.getNombre().equals("ROLE_ADMIN"))) {
-                // Si es admin, quitarle el rol
                 usuario.getRoles().removeIf(rol -> rol.getNombre().equals("ROLE_ADMIN"));
             } else {
-                // Si no es admin, agregar el rol
                 Rol adminRole = roleRepository.findByNombre("ROLE_ADMIN").orElseThrow(() -> new RuntimeException("Rol no encontrado"));
                 usuario.getRoles().add(adminRole);
             }
@@ -80,6 +67,4 @@ private RolRepository roleRepository;
         }
         return "redirect:/admin";
     }
-    // Acción para dar o quitar permisos de administrador
-    
 }
