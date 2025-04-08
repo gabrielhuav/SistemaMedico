@@ -3,177 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración de Pacientes</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('https://previews.123rf.com/images/creator76/creator761611/creator76161100025/68100720-iconos-m%C3%A9dicos-fondo-gris-s%C3%ADmbolos-de-la-medicina-sin-patr%C3%B3n-ilustraci%C3%B3n-m%C3%A9dica.jpg') no-repeat center center fixed;
-            background-size: cover;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        
-        .header {
-            background-color: #0077b6;
-            color: white;
-            width: 100%;
-            padding: 1rem 0;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        .container {
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            margin-top: 3rem;
-            width: 80%;
-            max-width: 700px;
-            text-align: center;
-        }
-        
-        h1 {
-            margin-bottom: 0.5rem;
-            color: white;
-        }
-        .container h1 {
-            margin-bottom: 0.5rem;
-            color: #0077b6;
-        }
-        
-        .form-group {
-            margin-bottom: 1rem;
-            text-align: left;
-        }
-        
-        label {
-            font-weight: bold;
-            color: #333;
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        
-        .btn-submit {
-            background-color: #0096c7;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            width: 100%;
-        }
-        
-        .btn-submit:hover {
-            background-color: #023e8a;
-            transform: scale(1.05);
-        }
-        
-        .logout {
-            margin-top: 2rem;
-            padding: 0.75rem 2rem;
-            background: rgba(0, 119, 182, 0.8);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            text-decoration: none;
-            display: inline-block;
-            transition: background 0.3s, transform 0.2s;
-        }
-        
-        .logout:hover {
-            background: rgba(2, 62, 138, 1);
-            transform: scale(1.05);
-        }
-    </style>
+    <title>Panel de Administración</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="header">
-        <h1>Administración de Pacientes</h1>
-    </div>
-    
-    <div class="container">
-        <h1>Registrar Paciente</h1>
-        
-        <form action="/pacientes/guardar" method="post">
-            <div class="form-group">
-                <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
+    <div class="container mt-4">
+        <h1 class="text-center">Panel de Administración</h1>
+        <div class="d-flex justify-content-between mb-3">
+            <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+            <a href="/home" class="btn btn-secondary">Regresar</a>
+        </div>
+
+        <h2>Agregar Usuario</h2>
+        <form action="/admin/users" method="post" class="mb-4">
+            <div class="mb-3">
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre de Usuario" required>
             </div>
-
-            <div class="form-group">
-                <label for="apellidos">Apellidos:</label>
-                <input type="text" id="apellidos" name="apellidos" required>
+            <div class="mb-3">
+                <input type="email" name="email" class="form-control" placeholder="Email" required>
             </div>
-
-            <div class="form-group">
-                <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+            <div class="mb-3">
+                <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
             </div>
-
-            <div class="form-group">
-                <label for="genero">Género:</label>
-                <select id="genero" name="genero" required>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Femenino">Femenino</option>
-                    <option value="Otro">Otro</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="direccion">Dirección:</label>
-                <input type="text" id="direccion" name="direccion" required>
-            </div>
-
-            <div class="form-group">
-                <label for="telefono">Teléfono de contacto:</label>
-                <input type="tel" id="telefono" name="telefono" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Correo electrónico:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-                <label for="contacto_emergencia">Contacto de emergencia:</label>
-                <input type="text" id="contacto_emergencia" name="contacto_emergencia" required>
-            </div>
-
-            <div class="form-group">
-                <label for="telefono_emergencia">Teléfono de emergencia:</label>
-                <input type="tel" id="telefono_emergencia" name="telefono_emergencia" required>
-            </div>
-
-            <div class="form-group">
-                <label for="enfermedades">Enfermedades crónicas:</label>
-                <textarea id="enfermedades" name="enfermedades" rows="2"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="alergias">Alergias conocidas:</label>
-                <textarea id="alergias" name="alergias" rows="2"></textarea>
-            </div>
-
-            <button type="submit" class="btn-submit">Guardar Paciente</button><br><br>
-            <a href="/pacientes/lista" class="btn-submit">Ver Lista de Pacientes</a>
-
+            <button type="submit" class="btn btn-primary">Agregar Usuario</button>
         </form>
 
-        <a href="/logout" class="logout">Cerrar Sesión</a>
+        <h2>Usuarios</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.id}"></td>
+                    <td th:text="${usuario.nombre}"></td>
+                    <td th:text="${usuario.email}"></td>
+                    <td>
+                        <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre}" class="badge bg-info me-1"></span>
+                    </td>
+                    <td>
+                        <form th:action="@{'/api/users/' + ${usuario.id} + '/toggle-admin'}" method="post" style="display:inline;">
+                            <input type="hidden" name="_method" value="PUT">
+                            <button type="submit" class="btn btn-warning">
+                                <span th:text="${usuario.roles.contains('ROLE_ADMIN') ? 'Quitar Admin' : 'Hacer Admin'}"></span>
+                            </button>
+                        </form>
+                        <form th:action="@{'/api/users/' + ${usuario.id} + '/toggle-doctor'}" method="post" style="display:inline;">
+                            <input type="hidden" name="_method" value="PUT">
+                            <button type="submit" class="btn btn-success">
+                                <span th:text="${usuario.roles.contains('ROLE_DOCTOR') ? 'Quitar Doctor' : 'Hacer Doctor'}"></span>
+                            </button>
+                        </form>
+                        <button th:onclick="'deleteUser(' + ${usuario.id} + ')'" class="btn btn-danger">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function deleteUser(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+                fetch(`/api/users/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = "/admin";
+                    } else {
+                        alert("Error al eliminar el usuario.");
+                    }
+                }).catch(error => {
+                    alert("Error en la solicitud: " + error);
+                });
+            }
+        }
+    </script>
 </body>
 </html>
