@@ -21,29 +21,29 @@ public class Consulta {
     private Usuario doctor;
 
     @Column(name = "fecha_hora", nullable = false)
-    private LocalDateTime fechaHora; // Cambiado a LocalDateTime para reflejar fecha y hora
+    private LocalDateTime fechaHora; // Refleja fecha y hora de la consulta
 
     @Column(name = "sintomas", columnDefinition = "TEXT")
-    private String sintomas; // Cambiado de "motivo" a "sintomas" para coincidir con la base de datos
+    private String sintomas; // Descripción de los síntomas del paciente
 
     @Column(name = "medicamentos", columnDefinition = "TEXT")
-    private String medicamentos;
+    private String medicamentos; // Medicamentos recetados
 
     @Column(name = "dosis", columnDefinition = "TEXT")
-    private String dosis;
+    private String dosis; // Dosis de los medicamentos
 
     @Column(name = "estado", nullable = false)
     @Enumerated(EnumType.STRING)
-    private EstadoConsulta estado;
+    private EstadoConsulta estado; // Estado de la consulta (Pendiente, Confirmada, Cancelada)
 
     @Column(name = "fecha_proxima_cita")
-    private LocalDate fechaProximaCita;
+    private LocalDate fechaProximaCita; // Fecha de la próxima cita, si aplica
 
     // Enum para el estado de la consulta
     public enum EstadoConsulta {
-        PENDIENTE,
-        CONFIRMADA,
-        CANCELADA
+        pendiente,
+        confirmada,
+        cancelada
     }
 
     // Getters y setters
