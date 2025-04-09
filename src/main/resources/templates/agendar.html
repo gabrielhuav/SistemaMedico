@@ -125,14 +125,15 @@
 
         // Crear botón de cambio de tema
         const themeToggle = document.createElement('button');
-        themeToggle.textContent = '🌙';
-        themeToggle.style.position = 'absolute';
+        themeToggle.textContent = '🌙';     
+        themeToggle.style.position = 'fixed';
         themeToggle.style.top = '10px';
-        themeToggle.style.right = '10px';
+        themeToggle.style.right = '1px';
         themeToggle.style.background = 'none';
         themeToggle.style.border = 'none';
         themeToggle.style.fontSize = '1.5rem';
         themeToggle.style.cursor = 'pointer';
+        themeToggle.style.zIndex = '1000';
         document.body.appendChild(themeToggle);
 
         // Cargar estado del modo oscuro desde localStorage
