@@ -21,32 +21,164 @@
             color: #ffffff;
         }
 
-        .table {
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .table.dark-mode {
-            background-color: #1e272e;
+        .container.dark-mode {
+            background: #1e272e;
             color: #ffffff;
         }
 
-        .btn {
+        h1, h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h1.dark-mode, h2.dark-mode {
+            color: #80cbc4;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
             transition: background-color 0.3s, color 0.3s;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        table th.dark-mode {
+            background-color: #37474f;
+            color: #ffffff;
+        }
+
+        table td {
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        table td.dark-mode {
+            background-color: #2c2c2c;
+            color: #ffffff;
+        }
+
+        .form-control {
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            color: #212529;
+            border: 1px solid #ced4da;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .form-control.dark-mode {
+            background-color: #9c9c9c;
+            color: #ffffff;
+            border: 1px solid #555;
+        }
+
+        .form-control.dark-mode:focus {
+            border-color: #80cbc4;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px 0;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
         }
 
         .btn.dark-mode {
             background-color: #37474f;
-            color: #ffffff;
         }
 
         .btn.dark-mode:hover {
             background-color: #455a64;
         }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #a71d2a;
+        }
+
+        .btn-danger.dark-mode {
+            background-color: #b71c1c;
+        }
+
+        .btn-danger.dark-mode:hover {
+            background-color: #d32f2f;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn-warning.dark-mode {
+            background-color: #ffb300;
+        }
+
+        .btn-warning.dark-mode:hover {
+            background-color: #ffa000;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-success.dark-mode {
+            background-color: #43a047;
+        }
+
+        .btn-success.dark-mode:hover {
+            background-color: #388e3c;
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <h1 class="text-center">Panel de Administración</h1>
+    <div class="container">
+        <h1>Panel de Administración</h1>
         <div class="d-flex justify-content-between mb-3">
             <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
             <a href="/home" class="btn btn-secondary">Regresar</a>
@@ -86,26 +218,13 @@
                         <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre}" class="badge bg-info me-1"></span>
                     </td>
                     <td>
-                        <!-- Botón para cambiar a Admin -->
-                        <button 
-                            class="btn btn-warning" 
-                            th:onclick="'confirmRoleChange(event, \'Admin\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-admin\')'">
+                        <button class="btn btn-warning" th:onclick="'confirmRoleChange(event, \'Admin\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-admin\')'">
                             <span th:text="${usuario.roles.contains('ROLE_ADMIN') ? 'Quitar Admin' : 'Hacer Admin'}"></span>
                         </button>
-
-                        <!-- Botón para cambiar a Doctor -->
-                        <button 
-                            class="btn btn-success" 
-                            th:onclick="'confirmRoleChange(event, \'Doctor\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-doctor\')'">
+                        <button class="btn btn-success" th:onclick="'confirmRoleChange(event, \'Doctor\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-doctor\')'">
                             <span th:text="${usuario.roles.contains('ROLE_DOCTOR') ? 'Quitar Doctor' : 'Hacer Doctor'}"></span>
                         </button>
-
-                        <!-- Botón para eliminar -->
-                        <button 
-                            class="btn btn-danger" 
-                            th:onclick="'deleteUser(' + ${usuario.id} + ')'">
-                            Eliminar
-                        </button>
+                        <button class="btn btn-danger" th:onclick="'deleteUser(' + ${usuario.id} + ')'">Eliminar</button>
                     </td>
                 </tr>
             </tbody>
@@ -115,95 +234,12 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function deleteUser(id) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Esta acción no se puede deshacer.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/api/users/${id}`, {
-                        method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' }
-                    }).then(response => {
-                        if (response.ok) {
-                            Swal.fire(
-                                '¡Eliminado!',
-                                'El usuario ha sido eliminado.',
-                                'success'
-                            ).then(() => {
-                                location.reload(); // Recargar la página
-                            });
-                        } else {
-                            Swal.fire(
-                                'Error',
-                                'Hubo un problema al eliminar el usuario.',
-                                'error'
-                            );
-                        }
-                    }).catch(error => {
-                        Swal.fire(
-                            'Error',
-                            'No se pudo completar la solicitud.',
-                            'error'
-                        );
-                    });
-                }
-            });
-        }
-
-        function confirmRoleChange(event, role, userId, actionUrl) {
-            event.preventDefault(); // Evitar el envío del formulario
-            Swal.fire({
-                title: `¿Estás seguro?`,
-                text: `¿Deseas cambiar el rol a ${role}?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, cambiar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Realizar la solicitud con fetch
-                    fetch(actionUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' }
-                    }).then(response => {
-                        if (response.ok) {
-                            Swal.fire(
-                                '¡Éxito!',
-                                `El rol de ${role} ha sido actualizado.`,
-                                'success'
-                            ).then(() => {
-                                location.reload(); // Recargar la página para reflejar los cambios
-                            });
-                        } else {
-                            Swal.fire(
-                                'Error',
-                                'Hubo un problema al actualizar el rol.',
-                                'error'
-                            );
-                        }
-                    }).catch(error => {
-                        Swal.fire(
-                            'Error',
-                            'No se pudo completar la solicitud.',
-                            'error'
-                        );
-                    });
-                }
-            });
-        }
-
         // Modo oscuro con localStorage
         const body = document.body;
-        const table = document.querySelector('.table');
+        const container = document.querySelector('.container');
+        const tableHeaders = document.querySelectorAll('table th');
+        const tableCells = document.querySelectorAll('table td');
+        const formControls = document.querySelectorAll('.form-control');
 
         // Crear botón de cambio de tema
         const themeToggle = document.createElement('button');
@@ -220,14 +256,20 @@
         // Cargar estado del modo oscuro desde localStorage
         if (localStorage.getItem('darkMode') === 'enabled') {
             body.classList.add('dark-mode');
-            table.classList.add('dark-mode');
+            container.classList.add('dark-mode');
+            tableHeaders.forEach(header => header.classList.add('dark-mode'));
+            tableCells.forEach(cell => cell.classList.add('dark-mode'));
+            formControls.forEach(control => control.classList.add('dark-mode'));
             themeToggle.textContent = '☀️';
         }
 
         // Alternar modo oscuro y guardar estado en localStorage
         themeToggle.addEventListener('click', () => {
             const isDarkMode = body.classList.toggle('dark-mode');
-            table.classList.toggle('dark-mode');
+            container.classList.toggle('dark-mode');
+            tableHeaders.forEach(header => header.classList.toggle('dark-mode'));
+            tableCells.forEach(cell => cell.classList.toggle('dark-mode'));
+            formControls.forEach(control => control.classList.toggle('dark-mode'));
             themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
         });
