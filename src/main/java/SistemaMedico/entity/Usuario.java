@@ -46,8 +46,16 @@ public class Usuario {
     )
     @JsonIgnore 
     private Set<Rol> roles = new HashSet<>();
+    public Usuario() {
+    }
+
+    // Constructor que acepta solo el ID
+    public Usuario(Long id) {
+        this.id = id;
+    }
 
     // Getters y setters
+    
 
     public Long getId() {
         return id;
