@@ -25,4 +25,8 @@ public class ConsultaService {
     public List<Consulta> obtenerTodasLasConsultas() {
         return consultaRepository.findAll();
     }
+    
+    public void guardarConsulta(Consulta consulta) {
+        consultaRepository.save(consulta);
+    }
 }
