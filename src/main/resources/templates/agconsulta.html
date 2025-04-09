@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Consulta</title>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -61,29 +63,58 @@
 <body>
     <div class="container">
         <h1>Agregar Consulta</h1>
-        <form action="/consultas/guardar" method="POST">
-            <!-- Campo oculto para el ID de la cita -->
-            <input type="hidden" name="idCita" th:value="${idCita}">
-
+        <form id="consultaForm" action="/consultas/guardar" method="POST">
+            <!-- Campo oculto para el ID del paciente -->
+            <input type="hidden" name="idPaciente" th:value="${idPaciente}">
+        
+            <!-- Campo oculto para el ID del doctor -->
+            <input type="hidden" name="idDoctor" th:value="${idDoctor}">
+        
+            <!-- Campo para la fecha y hora de la consulta -->
+            <label for="fechaHora">Fecha y Hora:</label>
+            <input type="datetime-local" id="fechaHora" name="fechaHora" required>
+        
             <!-- Campo para los síntomas -->
             <label for="sintomas">Síntomas:</label>
             <textarea id="sintomas" name="sintomas" rows="4" required></textarea>
-
+        
             <!-- Campo para los medicamentos -->
             <label for="medicamentos">Medicamentos:</label>
             <textarea id="medicamentos" name="medicamentos" rows="4"></textarea>
-
+        
             <!-- Campo para la dosis -->
             <label for="dosis">Dosis:</label>
             <textarea id="dosis" name="dosis" rows="2"></textarea>
-
+        
             <!-- Campo para la fecha de la próxima cita -->
             <label for="fechaProximaCita">Fecha de la Próxima Cita:</label>
             <input type="date" id="fechaProximaCita" name="fechaProximaCita">
-
+        
             <!-- Botón para guardar -->
-            <button type="submit">Guardar Consulta</button>
+            <button type="button" id="guardarConsultaBtn">Guardar Consulta</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('guardarConsultaBtn').addEventListener('click', function (event) {
+            event.preventDefault(); // Evita el envío inmediato del formulario
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¿Deseas guardar esta consulta?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Enviar el formulario si el usuario confirma
+                    document.getElementById('consultaForm').submit();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
