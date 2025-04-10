@@ -218,12 +218,19 @@
                         <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre}" class="badge bg-info me-1"></span>
                     </td>
                     <td>
-                        <button class="btn btn-warning" th:onclick="'confirmRoleChange(event, \'Admin\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-admin\')'">
+                        <!-- Botón para alternar rol de Admin -->
+                        <button class="btn btn-warning" 
+                                th:onclick="'toggleRole(event, \'Admin\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-admin\')'">
                             <span th:text="${usuario.roles.contains('ROLE_ADMIN') ? 'Quitar Admin' : 'Hacer Admin'}"></span>
                         </button>
-                        <button class="btn btn-success" th:onclick="'confirmRoleChange(event, \'Doctor\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-doctor\')'">
+
+                        <!-- Botón para alternar rol de Doctor -->
+                        <button class="btn btn-success" 
+                                th:onclick="'toggleRole(event, \'Doctor\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-doctor\')'">
                             <span th:text="${usuario.roles.contains('ROLE_DOCTOR') ? 'Quitar Doctor' : 'Hacer Doctor'}"></span>
                         </button>
+
+                        <!-- Botón para eliminar usuario -->
                         <button class="btn btn-danger" th:onclick="'deleteUser(' + ${usuario.id} + ')'">Eliminar</button>
                     </td>
                 </tr>
@@ -233,6 +240,62 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Función para alternar roles (Admin o Doctor)
+        function toggleRole(event, role, userId, url) {
+            event.preventDefault();
+            const action = role === 'Admin' ? 'administrador' : 'doctor';
+            Swal.fire({
+                title: `¿Estás seguro de cambiar el rol de ${action}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, cambiar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(url, { method: 'POST' })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire('¡Éxito!', `El rol de ${action} ha sido actualizado.`, 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', 'No se pudo actualizar el rol.', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire('Error', 'Ocurrió un error al procesar la solicitud.', 'error');
+                        });
+                }
+            });
+        }
+
+        // Función para eliminar un usuario
+        function deleteUser(userId) {
+            Swal.fire({
+                title: '¿Estás seguro de eliminar este usuario?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/api/users/${userId}`, { method: 'DELETE' })
+                        .then(response => {
+                            if (response.ok) {
+                                Swal.fire('¡Eliminado!', 'El usuario ha sido eliminado.', 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', 'No se pudo eliminar el usuario.', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire('Error', 'Ocurrió un error al procesar la solicitud.', 'error');
+                        });
+                }
+            });
+        }
+    </script>
     <script>
         // Modo oscuro con localStorage
         const body = document.body;
@@ -260,7 +323,7 @@
             tableHeaders.forEach(header => header.classList.add('dark-mode'));
             tableCells.forEach(cell => cell.classList.add('dark-mode'));
             formControls.forEach(control => control.classList.add('dark-mode'));
-            themeToggle.textContent = '☀️';
+            themeToggle.textContent = '☀';
         }
 
         // Alternar modo oscuro y guardar estado en localStorage
@@ -270,7 +333,7 @@
             tableHeaders.forEach(header => header.classList.toggle('dark-mode'));
             tableCells.forEach(cell => cell.classList.toggle('dark-mode'));
             formControls.forEach(control => control.classList.toggle('dark-mode'));
-            themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+            themeToggle.textContent = isDarkMode ? '☀' : '🌙';
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
         });
     </script>
