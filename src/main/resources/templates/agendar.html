@@ -6,7 +6,7 @@
     <title>Agendar Cita</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
@@ -21,11 +21,11 @@
 
         .container {
             max-width: 600px;
-            margin: 50px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 80px auto; /* Ajuste para que no se superponga con los botones superiores */
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -36,6 +36,8 @@
         h1 {
             text-align: center;
             color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
 
         h1.dark-mode {
@@ -46,15 +48,22 @@
             display: block;
             margin: 15px 0 5px;
             font-weight: bold;
+            font-size: 0.9rem;
         }
 
         input, select, textarea, button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 4px;
-            transition: background-color 0.3s, color 0.3s;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
         }
 
         input.dark-mode, select.dark-mode, textarea.dark-mode {
@@ -63,16 +72,25 @@
             border: 1px solid #555;
         }
 
+        input.dark-mode:focus, select.dark-mode:focus, textarea.dark-mode:focus {
+            border-color: #80cbc4;
+        }
+
         button {
             background-color: #007bff;
             color: white;
-            font-size: 16px;
+            font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            transition: background-color 0.3s, transform 0.2s;
         }
 
         button:hover {
             background-color: #0056b3;
+            transform: scale(1.02);
         }
 
         button.dark-mode {
@@ -82,9 +100,73 @@
         button.dark-mode:hover {
             background-color: #455a64;
         }
+
+        .top-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 40px; /* Aumentamos el padding horizontal */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: calc(100% - 80px); /* Ajustamos el ancho para compensar el padding */
+            background-color: transparent;
+            z-index: 1000;
+            box-shadow: none;
+        }
+
+        .top-buttons.dark-mode {
+            background-color: #121212;
+        }
+
+        .top-buttons a {
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .top-buttons a:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+        .top-buttons a.dark-mode {
+            background-color: #37474f;
+        }
+
+        .top-buttons a.dark-mode:hover {
+            background-color: #455a64;
+        }
+
+        .top-buttons button {
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: auto;
+            padding: 5px 10px;
+            margin-right: 10px; /* Añadimos un margen derecho */
+        }
+
+        .top-buttons button:hover {
+            transform: scale(1.2);
+        }
     </style>
 </head>
 <body>
+    <div class="top-buttons">
+        <!-- Botón para regresar al home -->
+        <a href="/home" id="home-button">Regresar</a>
+        <!-- Botón de cambio de tema -->
+        <button id="theme-toggle">🌙</button>
+    </div>
+
     <div class="container">
         <h1>Agendar Cita</h1>
         <form action="/citas/agendar" method="POST">
@@ -96,7 +178,6 @@
             <select name="id_doctor" id="id_doctor" required>
                 <!-- Estos valores deben ser generados dinámicamente desde el backend -->
                 <option th:each="doctor : ${doctores}" th:value="${doctor.id}" th:text="${doctor.nombre}"></option>
-        
             </select>
 
             <!-- Selección de la fecha -->
@@ -116,25 +197,14 @@
         </form>
     </div>
 
-    <!-- Botón de cambio de tema -->
     <script>
         const body = document.body;
         const container = document.querySelector('.container');
         const inputs = document.querySelectorAll('input, select, textarea');
         const button = document.querySelector('button');
-
-        // Crear botón de cambio de tema
-        const themeToggle = document.createElement('button');
-        themeToggle.textContent = '🌙';     
-        themeToggle.style.position = 'fixed';
-        themeToggle.style.top = '10px';
-        themeToggle.style.right = '1px';
-        themeToggle.style.background = 'none';
-        themeToggle.style.border = 'none';
-        themeToggle.style.fontSize = '1.5rem';
-        themeToggle.style.cursor = 'pointer';
-        themeToggle.style.zIndex = '1000';
-        document.body.appendChild(themeToggle);
+        const homeButton = document.getElementById('home-button');
+        const themeToggle = document.getElementById('theme-toggle');
+        const topButtons = document.querySelector('.top-buttons');
 
         // Cargar estado del modo oscuro desde localStorage
         if (localStorage.getItem('darkMode') === 'enabled') {
@@ -142,6 +212,8 @@
             container.classList.add('dark-mode');
             inputs.forEach(input => input.classList.add('dark-mode'));
             button.classList.add('dark-mode');
+            homeButton.classList.add('dark-mode');
+            topButtons.classList.add('dark-mode');
             themeToggle.textContent = '☀️';
         }
 
@@ -151,6 +223,8 @@
             container.classList.toggle('dark-mode');
             inputs.forEach(input => input.classList.toggle('dark-mode'));
             button.classList.toggle('dark-mode');
+            homeButton.classList.toggle('dark-mode');
+            topButtons.classList.toggle('dark-mode');
             themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
         });
