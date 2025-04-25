@@ -107,5 +107,4 @@ SELECT u.id, r.id
 FROM usuarios u, roles r
 WHERE u.email IN ('admin@gmail.com')
   AND r.nombre = 'ROLE_ADMIN';
-
   
