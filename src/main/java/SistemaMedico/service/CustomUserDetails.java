@@ -36,6 +36,9 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return usuario.getNombre();
     }
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
