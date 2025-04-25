@@ -22,6 +22,9 @@ public class ConsultaService {
     public List<Consulta> obtenerConsultasPorPaciente(Long pacienteId) {
         return consultaRepository.findByPacienteId(pacienteId);
     }
+    public List<Consulta> obtenerConsultasPorDoctor(Long doctorId) {
+        return consultaRepository.findByDoctorId(doctorId);
+    }
     public List<Consulta> obtenerTodasLasConsultas() {
         return consultaRepository.findAll();
     }
