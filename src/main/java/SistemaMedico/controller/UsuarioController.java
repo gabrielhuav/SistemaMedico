@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import SistemaMedico.entity.Usuario;
 import SistemaMedico.repository.UsuarioRepository;
 import SistemaMedico.service.NotificacionesService;
@@ -146,22 +148,21 @@ public class UsuarioController {
         if (usuarioActual != null) {
             System.out.println("Usuario actual: " + usuarioActual.getNombre());
     
-            // Obtener citas del usuario actual
-            List<Cita> citas = citaRepository.findByIdPaciente(usuarioActual.getId());
-            System.out.println("Citas encontradas: " + citas.size());
-    
             List<Map<String, String>> notificaciones = new ArrayList<>();
-            for (Cita cita : citas) {
-                // Buscar al doctor por su ID
+    
+            // Obtener citas del usuario como paciente
+            List<Cita> citasPaciente = citaRepository.findByIdPaciente(usuarioActual.getId());
+            System.out.println("Citas como paciente encontradas: " + citasPaciente.size());
+            for (Cita cita : citasPaciente) {
                 Usuario doctor = usuarioRepository.findById(cita.getIdDoctor()).orElse(null);
                 String nombreDoctor = (doctor != null) ? doctor.getNombre() : "Desconocido";
     
                 Map<String, String> notificacion = new HashMap<>();
                 notificacion.put("fecha", cita.getFechaHora().toString());
                 notificacion.put("titulo", "Cita programada");
-                notificacion.put("descripcion", "Tienes una cita con el Dr./Dra. " + nombreDoctor );//+ " el " + cita.getFechaHora());
+                notificacion.put("descripcion", "Tienes una cita con el Dr./Dra. " + nombreDoctor);
                 notificaciones.add(notificacion);
-
+    
                 if ("confirmada".equals(cita.getEstado())) {
                     Map<String, String> notificacionConcluida = new HashMap<>();
                     notificacionConcluida.put("fecha", cita.getFechaHora().toString());
@@ -170,11 +171,40 @@ public class UsuarioController {
                     notificaciones.add(notificacionConcluida);
                 }
                 if ("cancelada".equals(cita.getEstado())) {
+                    Map<String, String> notificacionCancelada = new HashMap<>();
+                    notificacionCancelada.put("fecha", cita.getFechaHora().toString());
+                    notificacionCancelada.put("titulo", "CITA CANCELADA");
+                    notificacionCancelada.put("descripcion", "Tu cita con el Dr./Dra. " + nombreDoctor + " ha sido cancelada.");
+                    notificaciones.add(notificacionCancelada);
+                }
+            }
+    
+            // Obtener citas del usuario como doctor
+            List<Cita> citasDoctor = citaRepository.findByIdDoctor(usuarioActual.getId());
+            System.out.println("Citas como doctor encontradas: " + citasDoctor.size());
+            for (Cita cita : citasDoctor) {
+                Usuario paciente = usuarioRepository.findById(cita.getIdPaciente()).orElse(null);
+                String nombrePaciente = (paciente != null) ? paciente.getNombre() : "Desconocido";
+    
+                Map<String, String> notificacion = new HashMap<>();
+                notificacion.put("fecha", cita.getFechaHora().toString());
+                notificacion.put("titulo", "Cita programada");
+                notificacion.put("descripcion", "Tienes una cita con el paciente " + nombrePaciente);
+                notificaciones.add(notificacion);
+    
+                if ("confirmada".equals(cita.getEstado())) {
                     Map<String, String> notificacionConcluida = new HashMap<>();
                     notificacionConcluida.put("fecha", cita.getFechaHora().toString());
-                    notificacionConcluida.put("titulo", "CITA CANCELADA");
-                    notificacionConcluida.put("descripcion", "Tu cita con el Dr./Dra. " + nombreDoctor + " ha sido cancelada.");
+                    notificacionConcluida.put("titulo", "CITA CONCLUIDA");
+                    notificacionConcluida.put("descripcion", "La cita con el paciente " + nombrePaciente + " ha concluido.");
                     notificaciones.add(notificacionConcluida);
+                }
+                if ("cancelada".equals(cita.getEstado())) {
+                    Map<String, String> notificacionCancelada = new HashMap<>();
+                    notificacionCancelada.put("fecha", cita.getFechaHora().toString());
+                    notificacionCancelada.put("titulo", "CITA CANCELADA");
+                    notificacionCancelada.put("descripcion", "La cita con el paciente " + nombrePaciente + " ha sido cancelada.");
+                    notificaciones.add(notificacionCancelada);
                 }
             }
     
@@ -185,4 +215,30 @@ public class UsuarioController {
         }
         return "notificaciones";
     }
+
+    @GetMapping("/notificaciones/nuevas")
+    @ResponseBody
+public Map<String, Integer> contarNotificacionesNoLeidas() {
+    Usuario usuarioActual = usuarioService.obtenerUsuarioActual();
+    Map<String, Integer> response = new HashMap<>();
+
+    if (usuarioActual != null) {
+        // Obtener citas del usuario actual
+        List<Cita> citas = citaRepository.findByIdPaciente(usuarioActual.getId());
+
+        // Contar notificaciones no leídas (puedes definir tu lógica aquí)
+        int nuevas = 0;
+        for (Cita cita : citas) {
+            if ("pendiente".equals(cita.getEstado())) {
+                nuevas++;
+            }
+        }
+
+        response.put("nuevas", nuevas);
+    } else {
+        response.put("nuevas", 0);
+    }
+
+    return response;
+}
 }
