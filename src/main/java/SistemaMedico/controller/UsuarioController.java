@@ -1,9 +1,13 @@
 package SistemaMedico.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import SistemaMedico.entity.Usuario;
 import SistemaMedico.repository.UsuarioRepository;
-import SistemaMedico.service.UsuarioService;;
+import SistemaMedico.service.NotificacionesService;
+import SistemaMedico.service.UsuarioService;
+import SistemaMedico.entity.Cita;
+import SistemaMedico.entity.Notificacion; // Ensure this import matches the package where Notificacion is defined
+import SistemaMedico.repository.CitaRepository; // Import the CitaRepository
 
 
 @Controller
@@ -27,6 +35,13 @@ public class UsuarioController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private NotificacionesService servicioNotificaciones;
+    
+    @Autowired
+    private CitaRepository citaRepository; // Declare and autowire CitaRepository
+
+    // Mostrar todos los usuarios
     // Mostrar todos los usuarios
     @GetMapping("/usuarios")
     public String listarUsuarios(Model model) {
@@ -123,5 +138,51 @@ public class UsuarioController {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuarioRepository.save(usuario);
         return "redirect:/login";
+    }
+
+    @GetMapping("/notificaciones")
+    public String mostrarNotificaciones(Model model) {
+        Usuario usuarioActual = usuarioService.obtenerUsuarioActual();
+        if (usuarioActual != null) {
+            System.out.println("Usuario actual: " + usuarioActual.getNombre());
+    
+            // Obtener citas del usuario actual
+            List<Cita> citas = citaRepository.findByIdPaciente(usuarioActual.getId());
+            System.out.println("Citas encontradas: " + citas.size());
+    
+            List<Map<String, String>> notificaciones = new ArrayList<>();
+            for (Cita cita : citas) {
+                // Buscar al doctor por su ID
+                Usuario doctor = usuarioRepository.findById(cita.getIdDoctor()).orElse(null);
+                String nombreDoctor = (doctor != null) ? doctor.getNombre() : "Desconocido";
+    
+                Map<String, String> notificacion = new HashMap<>();
+                notificacion.put("fecha", cita.getFechaHora().toString());
+                notificacion.put("titulo", "Cita programada");
+                notificacion.put("descripcion", "Tienes una cita con el Dr./Dra. " + nombreDoctor );//+ " el " + cita.getFechaHora());
+                notificaciones.add(notificacion);
+
+                if ("confirmada".equals(cita.getEstado())) {
+                    Map<String, String> notificacionConcluida = new HashMap<>();
+                    notificacionConcluida.put("fecha", cita.getFechaHora().toString());
+                    notificacionConcluida.put("titulo", "CITA CONCLUIDA");
+                    notificacionConcluida.put("descripcion", "Tu cita con el Dr./Dra. " + nombreDoctor + " ha concluido.");
+                    notificaciones.add(notificacionConcluida);
+                }
+                if ("cancelada".equals(cita.getEstado())) {
+                    Map<String, String> notificacionConcluida = new HashMap<>();
+                    notificacionConcluida.put("fecha", cita.getFechaHora().toString());
+                    notificacionConcluida.put("titulo", "CITA CANCELADA");
+                    notificacionConcluida.put("descripcion", "Tu cita con el Dr./Dra. " + nombreDoctor + " ha sido cancelada.");
+                    notificaciones.add(notificacionConcluida);
+                }
+            }
+    
+            model.addAttribute("notificaciones", notificaciones);
+        } else {
+            System.out.println("Usuario no autenticado o no encontrado.");
+            model.addAttribute("notificaciones", List.of());
+        }
+        return "notificaciones";
     }
 }
