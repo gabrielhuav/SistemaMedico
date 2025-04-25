@@ -1,8 +1,10 @@
 package SistemaMedico.controller;
 
+import SistemaMedico.entity.Cita;
 import SistemaMedico.entity.Consulta;
 import SistemaMedico.entity.Usuario;
 import SistemaMedico.service.ConsultaService;
+import SistemaMedico.repository.CitaRepository;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -19,11 +21,12 @@ import java.util.List;
 public class ConsultaController {
 
     private final ConsultaService consultaService;
+    private final CitaRepository citaRepository;
 
-    public ConsultaController(ConsultaService consultaService) {
+    public ConsultaController(ConsultaService consultaService, CitaRepository citaRepository) {
         this.consultaService = consultaService;
+        this.citaRepository = citaRepository; // Inyecta el repositorio
     }
-
     @GetMapping
     public String mostrarConsultas(Model model) {
         List<Consulta> consultas = consultaService.obtenerTodasLasConsultas();
@@ -44,6 +47,7 @@ public class ConsultaController {
     
   @PostMapping("/guardar")
     public String guardarConsulta(
+            @RequestParam Long idCita,
             @RequestParam Long idPaciente,
             @RequestParam Long idDoctor,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaHora,
@@ -51,6 +55,7 @@ public class ConsultaController {
             @RequestParam(required = false) String medicamentos,
             @RequestParam(required = false) String dosis,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaProximaCita,
+            @RequestParam Consulta.EstadoConsulta estado, 
             Model model) {
         try {
             // Crear una nueva consulta
@@ -61,11 +66,17 @@ public class ConsultaController {
             consulta.setSintomas(sintomas);
             consulta.setMedicamentos(medicamentos);
             consulta.setDosis(dosis);
-            consulta.setEstado(Consulta.EstadoConsulta.pendiente);
+            consulta.setEstado(estado);
             consulta.setFechaProximaCita(fechaProximaCita);
 
             // Guardar la consulta
             consultaService.guardarConsulta(consulta);
+
+            Cita cita = citaRepository.findById(idCita).orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
+            cita.setEstado("confirmada"); // Cambia el estado de la cita a "confirmada"
+            citaRepository.save(cita);
+
+            
 
             model.addAttribute("mensaje", "Consulta registrada exitosamente.");
         } catch (Exception e) {
