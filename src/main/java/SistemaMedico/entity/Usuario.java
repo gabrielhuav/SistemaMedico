@@ -1,22 +1,11 @@
 package SistemaMedico.entity;
 
-
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "usuarios")
@@ -34,29 +23,36 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-     @Lob
-    @Column(name = "imagen", columnDefinition = "LONGBLOB") // Cambiado a LONGBLOB para soportar imágenes más grandes
+    @Lob
+    @Column(name = "imagen", columnDefinition = "LONGBLOB")
     private byte[] imagen;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "usuario_roles",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "rol_id")
+        name = "usuario_roles",
+        joinColumns = @JoinColumn(name = "usuario_id"),
+        inverseJoinColumns = @JoinColumn(name = "rol_id")
     )
-    @JsonIgnore 
     private Set<Rol> roles = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "emisor", cascade = CascadeType.ALL)
+    private List<MensajeChat> mensajesEnviados = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "receptor", cascade = CascadeType.ALL)
+    private List<MensajeChat> mensajesRecibidos = new ArrayList<>();
+
+    // Constructores
     public Usuario() {
     }
 
-    // Constructor que acepta solo el ID
     public Usuario(Long id) {
         this.id = id;
     }
 
-    // Getters y setters
-    
-
+    // Getters y Setters existentes...
     public Long getId() {
         return id;
     }
@@ -103,6 +99,20 @@ public class Usuario {
     public void setImagen(byte[] imagen) {
         this.imagen = imagen;
     }
-   
-    
+
+    public List<MensajeChat> getMensajesEnviados() {
+        return mensajesEnviados;
+    }
+
+    public void setMensajesEnviados(List<MensajeChat> mensajesEnviados) {
+        this.mensajesEnviados = mensajesEnviados;
+    }
+
+    public List<MensajeChat> getMensajesRecibidos() {
+        return mensajesRecibidos;
+    }
+
+    public void setMensajesRecibidos(List<MensajeChat> mensajesRecibidos) {
+        this.mensajesRecibidos = mensajesRecibidos;
+    }
 }
