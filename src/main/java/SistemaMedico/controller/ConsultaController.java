@@ -5,10 +5,13 @@ import SistemaMedico.entity.Consulta;
 import SistemaMedico.entity.Usuario;
 import SistemaMedico.service.ConsultaService;
 import SistemaMedico.repository.CitaRepository;
+import SistemaMedico.repository.UsuarioRepository;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -22,26 +25,57 @@ public class ConsultaController {
 
     private final ConsultaService consultaService;
     private final CitaRepository citaRepository;
+    private final UsuarioRepository usuarioRepository;
 
-    public ConsultaController(ConsultaService consultaService, CitaRepository citaRepository) {
+    public ConsultaController(ConsultaService consultaService, CitaRepository citaRepository, UsuarioRepository usuarioRepository) {
         this.consultaService = consultaService;
-        this.citaRepository = citaRepository; // Inyecta el repositorio
+        this.citaRepository = citaRepository;
+        this.usuarioRepository = usuarioRepository; // Inyecta el repositorio
     }
-    @GetMapping
+   @GetMapping
     public String mostrarConsultas(Model model) {
-        List<Consulta> consultas = consultaService.obtenerTodasLasConsultas();
+    // Obtener el usuario autenticado
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+
+    // Buscar el usuario autenticado por nombre
+    Usuario usuario = usuarioRepository.findByNombre(username);
+    if (usuario != null) {
+        // Verificar si el usuario tiene el rol de doctor
+        boolean isDoctor = usuario.getRoles().stream()
+                .anyMatch(rol -> rol.getNombre().equals("ROLE_DOCTOR"));
+
+        List<Consulta> consultas;
+        if (isDoctor) {
+            // Si es doctor, mostrar las consultas asignadas a él como doctor
+            consultas = consultaService.obtenerConsultasPorDoctor(usuario.getId());
+        } else {
+            // Si no es doctor, mostrar solo sus consultas como paciente
+            consultas = consultaService.obtenerConsultasPorPaciente(usuario.getId());
+        }
+
         model.addAttribute("consultas", consultas);
-        return "consultas"; // Nombre del archivo HTML en templates
+        model.addAttribute("isDoctor", isDoctor); // Pasar el rol al modelo si es necesario
+    } else {
+        model.addAttribute("consultas", List.of()); // Si no hay usuario autenticado, lista vacía
     }
+
+    return "consultas"; // Nombre del archivo HTML
+}
     @GetMapping("/agregar/{idCita}")
     public String mostrarFormularioAgregarConsulta(@PathVariable Long idCita, Model model) {
-        // Simula obtener los IDs del paciente y doctor asociados a la cita
-        Long idPaciente = 1L; // Reemplaza con lógica real para obtener el ID del paciente
-        Long idDoctor = 2L;  // Reemplaza con lógica real para obtener el ID del doctor
+        // Obtener la cita por ID
+        Cita cita = citaRepository.findById(idCita).orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
     
+        // Obtener el paciente y el doctor asociados a la cita
+        Usuario paciente = usuarioRepository.findById(cita.getIdPaciente()).orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
+        Usuario doctor = usuarioRepository.findById(cita.getIdDoctor()).orElseThrow(() -> new IllegalArgumentException("Doctor no encontrado"));
+    
+        // Pasar los datos al modelo
         model.addAttribute("idCita", idCita);
-        model.addAttribute("idPaciente", idPaciente);
-        model.addAttribute("idDoctor", idDoctor);
+        model.addAttribute("idPaciente", paciente.getId());
+        model.addAttribute("idDoctor", doctor.getId());
+    
         return "agconsulta"; // Nombre del archivo HTML
     }
     
