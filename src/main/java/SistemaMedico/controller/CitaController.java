@@ -200,4 +200,30 @@ public String eliminarCita(@PathVariable Long id, Model model) {
     return "redirect:/citas";
 }
 
+@GetMapping("/cambiarEstado/{idCita}")
+public String cambiarEstadoCita(@PathVariable Long idCita, Model model) {
+    try {
+        // Buscar la cita por ID
+        Cita cita = citaRepository.findById(idCita).orElseThrow(() -> new IllegalArgumentException("Cita no encontrada"));
+
+        // Cambiar el estado de la cita
+        if ("pendiente".equals(cita.getEstado())) {
+            cita.setEstado("confirmada");
+        } else if ("confirmada".equals(cita.getEstado())) {
+            cita.setEstado("cancelada");
+        } else if ("cancelada".equals(cita.getEstado())) {
+            cita.setEstado("pendiente");
+        }
+
+        // Guardar los cambios
+        citaRepository.save(cita);
+
+        model.addAttribute("mensaje", "El estado de la cita se ha cambiado exitosamente.");
+    } catch (Exception e) {
+        model.addAttribute("error", "Error al cambiar el estado de la cita: " + e.getMessage());
+    }
+
+    return "redirect:/citas"; // Redirige a la lista de citas
+}
+
 }
