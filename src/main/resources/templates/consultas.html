@@ -150,13 +150,14 @@
 <body>
     <div class="container">
         <h1>Gestión de Consultas</h1>
+        <a href="/home" class="btn">Regresar</a>
 
         <!-- Mensajes de éxito o error -->
         <div th:if="${mensaje}" th:text="${mensaje}" class="message success"></div>
         <div th:if="${error}" th:text="${error}" class="message error"></div>
 
         <!-- Botón para registrar nueva consulta (solo para doctores) -->
-        <a href="/consultas/registrar" class="btn">Registrar Nueva Consulta</a>
+        <!-- <a href="/consultas/registrar" class="btn">Registrar Nueva Consulta</a> -->
 
         <!-- Tabla de consultas -->
         <table>
