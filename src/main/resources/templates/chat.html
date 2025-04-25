@@ -293,6 +293,38 @@
             </form>
         </div>
     </div>
+    <script>
+        // Referencias a elementos
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+    
+        // Cargar estado del modo oscuro desde localStorage
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+            document.querySelector('.chat-container').classList.add('dark-mode');
+            document.querySelector('.chat-header').classList.add('dark-mode');
+            document.querySelectorAll('.message').forEach(msg => msg.classList.add('dark-mode'));
+            document.querySelector('.chat-input input').classList.add('dark-mode');
+            document.querySelectorAll('.contact').forEach(contact => contact.classList.add('dark-mode'));
+        }
+    
+        // Alternar modo oscuro y guardar estado en localStorage
+        themeToggle.addEventListener('click', () => {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+    
+            // Cambiar clases de elementos específicos
+            document.querySelector('.chat-container').classList.toggle('dark-mode');
+            document.querySelector('.chat-header').classList.toggle('dark-mode');
+            document.querySelectorAll('.message').forEach(msg => msg.classList.toggle('dark-mode'));
+            document.querySelector('.chat-input input').classList.toggle('dark-mode');
+            document.querySelectorAll('.contact').forEach(contact => contact.classList.toggle('dark-mode'));
+    
+            // Guardar estado en localStorage
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        });
+    </script>
 
     <!-- Agregar variables de Thymeleaf como datos -->
     <script th:inline="javascript">
@@ -300,20 +332,7 @@
         const currentUserId = /*[[${currentUserId}]]*/ null;
         
         // Función para cambiar tema oscuro/claro
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            document.querySelector('.chat-container').classList.toggle('dark-mode');
-            document.querySelector('.chat-header').classList.toggle('dark-mode');
-            document.querySelectorAll('.message').forEach(msg => msg.classList.toggle('dark-mode'));
-            document.querySelector('.chat-input input').classList.toggle('dark-mode');
-            document.querySelectorAll('.contact').forEach(contact => contact.classList.toggle('dark-mode'));
-            
-            const themeToggle = document.querySelector('.theme-toggle');
-            themeToggle.classList.toggle('dark-mode');
-            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-            
-            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-        }
+        
     
         // Función para seleccionar contacto
         function selectContact(contactId) {
