@@ -78,8 +78,20 @@ public String mostrarPaginaCitas(Model model) {
     // Mostrar el formulario para agendar una nueva cita
     @GetMapping("/agendar")
     public String mostrarFormularioAgendar(Model model) {
+        // Obtener el usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+    
+        // Buscar el usuario autenticado por nombre
+        Usuario usuarioActual = usuarioRepository.findByNombre(username);
+        if (usuarioActual != null) {
+            model.addAttribute("usuarioActual", usuarioActual); // Pasar el usuario autenticado al modelo
+        }
+    
+        // Obtener la lista de doctores
         List<Usuario> doctores = usuarioRepository.findByRolesNombre("ROLE_DOCTOR");
         model.addAttribute("doctores", doctores);
+    
         return "agendar"; // Nombre del archivo HTML para el formulario
     }
 
