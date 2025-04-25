@@ -102,4 +102,10 @@ FROM usuarios u, roles r
 WHERE u.email IN ('juan.perez@hospital.com', 'maria.lopez@hospital.com', 'carlos.garcia@hospital.com')
   AND r.nombre = 'ROLE_DOCTOR';
 
+INSERT INTO usuario_roles (usuario_id, rol_id)
+SELECT u.id, r.id
+FROM usuarios u, roles r
+WHERE u.email IN ('admin@gmail.com')
+  AND r.nombre = 'ROLE_ADMIN';
+
   
