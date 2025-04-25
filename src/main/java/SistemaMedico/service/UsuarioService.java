@@ -1,5 +1,6 @@
 package SistemaMedico.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -8,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import SistemaMedico.entity.Usuario;
 import SistemaMedico.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 public class UsuarioService {
@@ -31,6 +35,20 @@ public class UsuarioService {
     // Método para obtener todos los usuarios
     public List<Usuario> obtenerTodosLosUsuarios() {
         return usuarioRepository.findAll();
+    }
+
+    public Usuario obtenerUsuarioActual() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof CustomUserDetails) {
+                CustomUserDetails userDetails = (CustomUserDetails) principal;
+                System.out.println("Usuario autenticado: " + userDetails.getUsername());
+                return userDetails.getUsuario(); // Devuelve el objeto Usuario directamente
+            }
+        }
+        System.out.println("No se pudo obtener el usuario autenticado.");
+        return null;
     }
     
 }
