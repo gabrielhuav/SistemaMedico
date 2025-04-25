@@ -65,6 +65,7 @@
         <h1>Agregar Consulta</h1>
         <form id="consultaForm" action="/consultas/guardar" method="POST">
             <!-- Campo oculto para el ID del paciente -->
+            <input type="hidden" name="idCita" value="1"> <!-- ID de la cita -->
             <input type="hidden" name="idPaciente" th:value="${idPaciente}">
         
             <!-- Campo oculto para el ID del doctor -->
@@ -89,6 +90,13 @@
             <!-- Campo para la fecha de la próxima cita -->
             <label for="fechaProximaCita">Fecha de la Próxima Cita:</label>
             <input type="date" id="fechaProximaCita" name="fechaProximaCita">
+
+            <label for="estado">Estado:</label>
+            <select id="estado" name="estado" required>
+                <option value="pendiente">Pendiente</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="cancelada">Cancelada</option>
+            </select>
         
             <!-- Botón para guardar -->
             <button type="button" id="guardarConsultaBtn">Guardar Consulta</button>
