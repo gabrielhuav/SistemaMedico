@@ -65,7 +65,7 @@
         <h1>Agregar Consulta</h1>
         <form id="consultaForm" action="/consultas/guardar" method="POST">
             <!-- Campo oculto para el ID del paciente -->
-            <input type="hidden" name="idCita" value="1"> <!-- ID de la cita -->
+            <input type="hidden" name="idCita" th:value="${idCita}"> <!-- ID de la cita -->
             <input type="hidden" name="idPaciente" th:value="${idPaciente}">
         
             <!-- Campo oculto para el ID del doctor -->
