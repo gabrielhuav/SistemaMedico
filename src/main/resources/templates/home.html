@@ -54,6 +54,15 @@
             background-color: #1e272e;
             color: #ffffff;
         }
+        .card-body.dark-mode {
+            background-color: #3b3f43;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
 
         .btn-primary {
             background-color: #00796b;
@@ -101,7 +110,7 @@
         }
 
         .footer {
-            margin-top: 15rem;
+            margin-top: 10rem;
             text-align: center;
             padding: 1rem;
             background-color: #00796b;
@@ -156,17 +165,66 @@
 
     <!-- Main Content -->
     <div class="container">
-        <div class="card p-4">
-            <h2 class="text-center">Hola, <span th:text="${nombreUsuario}" style="color: #00796b;">Paciente</span></h2>
-            <div class="d-flex justify-content-center flex-wrap gap-3 mt-4">
-                <a href="/citas" class="btn btn-primary">Citas</a>
-                <a href="/calendario" class="btn btn-primary">Calendario</a>
-                <a href="/perfil" class="btn btn-primary">Mi Perfil</a>
-                <a href="/consultas" class="btn btn-primary">Consultas</a> 
-                <a href="/chat" class="btn btn-primary">Chat</a> 
-                <a href="/admin" th:if="${isAdmin}" class="btn btn-primary">Administrador</a>
+        <div class="card p-4 text-center">
+            <h2 class="mb-4">Hola, <span th:text="${nombreUsuario}" style="color: #00796b;">Paciente</span></h2>
+            <p class="mb-4" style="font-size: 1.2rem;">Selecciona una opción para continuar:</p>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Citas</h5>
+                            <p class="card-text">Consulta y gestiona tus citas médicas fácilmente.</p>
+                            <a href="/citas" class="btn btn-primary">Ir a Citas</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Calendario</h5>
+                            <p class="card-text">Visualiza tus citas en un calendario interactivo.</p>
+                            <a href="/calendario" class="btn btn-primary">Ir al Calendario</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Mi Perfil</h5>
+                            <p class="card-text">Actualiza tu información personal y médica.</p>
+                            <a href="/perfil" class="btn btn-primary">Ir a Mi Perfil</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Consultas</h5>
+                            <p class="card-text">Revisa tus consultas médicas y su historial.</p>
+                            <a href="/consultas" class="btn btn-primary">Ir a Consultas</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Chat</h5>
+                            <p class="card-text">Comunícate con tu médico de manera directa.</p>
+                            <a href="/chat" class="btn btn-primary">Ir al Chat</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" th:if="${isAdmin}">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Administrador</h5>
+                            <p class="card-text">Gestiona usuarios y configuraciones del sistema.</p>
+                            <a href="/admin" class="btn btn-primary">Ir al Administrador</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="text-center mt-4">
+            <div class="mt-4">
                 <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
             </div>
         </div>
@@ -193,6 +251,7 @@
             document.querySelector('.navbar').classList.add('dark-mode');
             document.querySelector('.footer').classList.add('dark-mode');
             document.querySelector('.card').classList.add('dark-mode');
+            document.querySelectorAll('.card-body').forEach(card => card.classList.add('dark-mode'));
         }
     
         // Alternar modo oscuro y guardar estado en localStorage
@@ -204,6 +263,13 @@
             document.querySelector('.navbar').classList.toggle('dark-mode');
             document.querySelector('.footer').classList.toggle('dark-mode');
             document.querySelector('.card').classList.toggle('dark-mode');
+            document.querySelectorAll('.card-body').forEach(card => {
+            if (isDarkMode) {
+                card.classList.add('dark-mode');
+            } else {
+                card.classList.remove('dark-mode');
+            }
+        });
     
             // Guardar estado en localStorage
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
