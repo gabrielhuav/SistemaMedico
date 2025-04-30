@@ -22,7 +22,7 @@ import SistemaMedico.repository.UsuarioRepository;
 import SistemaMedico.service.NotificacionesService;
 import SistemaMedico.service.UsuarioService;
 import SistemaMedico.entity.Cita;
-import SistemaMedico.entity.Notificacion; // Ensure this import matches the package where Notificacion is defined
+import SistemaMedico.entity.Notificacion; // Ensure this import matches the 
 import SistemaMedico.repository.CitaRepository; // Import the CitaRepository
 
 
