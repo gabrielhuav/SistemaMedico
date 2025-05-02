@@ -186,6 +186,9 @@
                         <a th:href="@{'/citas/eliminar/' + ${cita.id}}" class="btn btn-danger">Eliminar</a>
                         <a th:if="${isDoctor}" th:href="@{'/consultas/agregar/' + ${cita.id}}" class="btn btn-primary">Agregar Consulta</a>
                         <a th:if="${isDoctor}" th:href="@{'/citas/cambiarEstado/' + ${cita.id}}" class="btn btn-warning">Cambiar Estado</a>
+                        <a th:href="@{'/tickets/ver/' + ${cita.id}}" class="btn btn-info btn-sm">
+                            <i class="fas fa-ticket-alt"></i> Ticket
+                        </a>
                     </td>
                 </tr>
                 <!-- Mostrar mensaje si no hay citas -->

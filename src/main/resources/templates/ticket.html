@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket de Cita Médica</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        
+        .ticket-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .ticket-container.dark-mode {
+            background-color: #1e272e;
+            color: #ffffff;
+            box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+        }
+        
+        .ticket-header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #dee2e6;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        .ticket-header.dark-mode {
+            border-bottom: 2px dashed #4d5b66;
+        }
+        
+        .ticket-logo {
+            margin-bottom: 15px;
+        }
+        
+        .ticket-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0d6efd;
+            transition: color 0.3s;
+        }
+        
+        .ticket-title.dark-mode {
+            color: #80cbc4;
+        }
+        
+        .ticket-subtitle {
+            font-size: 14px;
+            color: #6c757d;
+            transition: color 0.3s;
+        }
+        
+        .ticket-subtitle.dark-mode {
+            color: #adb5bd;
+        }
+        
+        .ticket-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #dc3545;
+            margin: 10px 0;
+            transition: color 0.3s;
+        }
+        
+        .ticket-number.dark-mode {
+            color: #ef5350;
+        }
+        
+        .ticket-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-group {
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            font-size: 14px;
+            color: #495057;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+        
+        .info-label.dark-mode {
+            color: #ced4da;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        
+        .ticket-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #dee2e6;
+            font-size: 14px;
+            color: #6c757d;
+            transition: border-color 0.3s, color 0.3s;
+        }
+        
+        .ticket-footer.dark-mode {
+            border-top: 2px dashed #4d5b66;
+            color: #adb5bd;
+        }
+        
+        .estado-pendiente {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        
+        .estado-confirmada {
+            color: #198754;
+            font-weight: bold;
+        }
+        
+        .estado-cancelada {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .print-button {
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary.dark-mode {
+            background-color: #37474f;
+            border-color: #37474f;
+        }
+        
+        .btn-primary.dark-mode:hover {
+            background-color: #455a64;
+            border-color: #455a64;
+        }
+        
+        .btn-secondary.dark-mode {
+            background-color: #546e7a;
+            border-color: #546e7a;
+        }
+        
+        .btn-secondary.dark-mode:hover {
+            background-color: #607d8b;
+            border-color: #607d8b;
+        }
+        
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #0d6efd;
+            transition: color 0.3s;
+        }
+        
+        .theme-toggle.dark-mode {
+            color: #80cbc4;
+        }
+    </style>
+</head>
+<body>
+    <button id="themeToggle" class="theme-toggle">🌙</button>
+    
+    <div class="container">
+        <div class="ticket-container">
+            <div class="ticket-header">
+                <h1 class="ticket-title">Sistema Médico</h1>
+                <p class="ticket-subtitle">Ticket de cita médica</p>
+                <p class="ticket-number">Cita #<span th:text="${ticket.numeroCita}">123</span></p>
+            </div>
+            
+            <div class="ticket-info">
+                <div class="info-group">
+                    <div class="info-label">Fecha:</div>
+                    <div class="info-value" th:text="${ticket.fechaCita}">01/05/2025</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Hora:</div>
+                    <div class="info-value" th:text="${ticket.horaCita}">10:30</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Paciente:</div>
+                    <div class="info-value" th:text="${ticket.pacienteNombre}">Juan Pérez</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Email del Paciente:</div>
+                    <div class="info-value" th:text="${ticket.pacienteEmail}">juan@ejemplo.com</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Doctor:</div>
+                    <div class="info-value" th:text="${ticket.doctorNombre}">Dr. Carlos García</div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Email del Doctor:</div>
+                    <div class="info-value" th:text="${ticket.doctorEmail}">doctor@ejemplo.com</div>
+                </div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Motivo de la Cita:</div>
+                <div class="info-value" th:text="${ticket.motivoCita}">Consulta general</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Estado:</div>
+                <div class="info-value">
+                    <span th:class="${'estado-' + ticket.estadoCita}" th:text="${ticket.estadoCita}">pendiente</span>
+                </div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Próxima Cita:</div>
+                <div class="info-value" th:text="${ticket.fechaProximaCita}">No programada</div>
+            </div>
+            
+            <div class="ticket-footer">
+                <p>Este ticket es un comprobante oficial de su cita médica.</p>
+                <p>Por favor, preséntelo al momento de su consulta.</p>
+            </div>
+            
+            <div class="text-center no-print">
+                <button onclick="window.print()" class="btn btn-primary print-button">Imprimir Ticket</button>
+                <a th:href="@{/citas}" class="btn btn-secondary print-button">Volver a Citas</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Referencias a elementos
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const ticketContainer = document.querySelector('.ticket-container');
+        const ticketHeader = document.querySelector('.ticket-header');
+        const ticketTitle = document.querySelector('.ticket-title');
+        const ticketSubtitle = document.querySelector('.ticket-subtitle');
+        const ticketNumber = document.querySelector('.ticket-number');
+        const infoLabels = document.querySelectorAll('.info-label');
+        const ticketFooter = document.querySelector('.ticket-footer');
+        const printButton = document.querySelector('.btn-primary');
+        const backButton = document.querySelector('.btn-secondary');
+    
+        // Cargar estado del modo oscuro desde localStorage
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+            themeToggle.classList.add('dark-mode');
+            ticketContainer.classList.add('dark-mode');
+            ticketHeader.classList.add('dark-mode');
+            ticketTitle.classList.add('dark-mode');
+            ticketSubtitle.classList.add('dark-mode');
+            ticketNumber.classList.add('dark-mode');
+            infoLabels.forEach(label => label.classList.add('dark-mode'));
+            ticketFooter.classList.add('dark-mode');
+            printButton.classList.add('dark-mode');
+            backButton.classList.add('dark-mode');
+        }
+    
+        // Alternar modo oscuro y guardar estado en localStorage
+        themeToggle.addEventListener('click', () => {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+            themeToggle.classList.toggle('dark-mode');
+            ticketContainer.classList.toggle('dark-mode');
+            ticketHeader.classList.toggle('dark-mode');
+            ticketTitle.classList.toggle('dark-mode');
+            ticketSubtitle.classList.toggle('dark-mode');
+            ticketNumber.classList.toggle('dark-mode');
+            infoLabels.forEach(label => label.classList.toggle('dark-mode'));
+            ticketFooter.classList.toggle('dark-mode');
+            printButton.classList.toggle('dark-mode');
+            backButton.classList.toggle('dark-mode');
+    
+            // Guardar estado en localStorage
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        });
+    </script>
+</body>
+</html>
