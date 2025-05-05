@@ -4,6 +4,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import SistemaMedico.entity.Usuario;
@@ -35,6 +36,9 @@ public class UsuarioService {
     // Método para obtener todos los usuarios
     public List<Usuario> obtenerTodosLosUsuarios() {
         return usuarioRepository.findAll();
+    }
+    public Optional<Usuario> encontrarPorId(Long id) {
+        return usuarioRepository.findById(id);
     }
 
     public Usuario obtenerUsuarioActual() {

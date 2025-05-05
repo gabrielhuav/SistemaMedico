@@ -48,7 +48,10 @@ public class CalendarioController {
             List<Cita> citasPaciente = citaRepository.findByIdPaciente(usuarioActual.getId());
             for (Cita cita : citasPaciente) {
                 Map<String, Object> evento = new HashMap<>();
-                evento.put("title", "Cita con el Dr./Dra. " + cita.getIdDoctor());
+                String nombreDoctor = usuarioService.encontrarPorId(cita.getIdDoctor())
+                .map(doctor -> doctor.getNombre())
+                .orElse("Doctor #" + cita.getIdDoctor());
+                evento.put("title", "Cita con el Dr./Dra. " + nombreDoctor);
                 evento.put("start", cita.getFechaHora().toString()); // Fecha de inicio en formato ISO
                 evento.put("estado", cita.getEstado()); // Estado de la cita
                 eventos.add(evento);
@@ -58,7 +61,10 @@ public class CalendarioController {
             List<Cita> citasDoctor = citaRepository.findByIdDoctor(usuarioActual.getId());
             for (Cita cita : citasDoctor) {
                 Map<String, Object> evento = new HashMap<>();
-                evento.put("title", "Cita con el Paciente " + cita.getIdPaciente());
+                String nombrePaciente = usuarioService.encontrarPorId(cita.getIdPaciente())
+                .map(paciente -> paciente.getNombre())
+                .orElse("Paciente #" + cita.getIdPaciente());
+                evento.put("title", "Cita con el Paciente " + nombrePaciente);
                 evento.put("start", cita.getFechaHora().toString()); // Fecha de inicio en formato ISO
                 evento.put("estado", cita.getEstado()); // Estado de la cita
                 eventos.add(evento);

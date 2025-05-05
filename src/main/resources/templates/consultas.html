@@ -163,7 +163,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                
                     <th>Paciente</th>
                     <th>Doctor</th>
                     <th>Síntomas</th>
@@ -175,7 +175,7 @@
             <tbody>
                 <!-- Generar dinámicamente las consultas desde el backend -->
                 <tr th:each="consulta : ${consultas}">
-                    <td th:text="${consulta.id}"></td>
+                   
                     <td th:text="${consulta.paciente.nombre}"></td>
                     <td th:text="${consulta.doctor.nombre}"></td>
                     <td th:text="${consulta.sintomas}"></td>

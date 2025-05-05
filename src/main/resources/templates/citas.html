@@ -162,7 +162,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    
                     <th th:if="${!isDoctor}">Doctor</th>
                     <th th:if="${isDoctor}">Paciente</th>
                     <th>Fecha y Hora</th>
@@ -174,7 +174,7 @@
             <tbody>
                 <!-- Generar dinámicamente las citas desde el backend -->
                 <tr th:each="cita : ${citas}">
-                    <td th:text="${cita.id}"></td>
+                    
                     <!-- Mostrar el nombre del paciente si el usuario es doctor -->
                     <td th:if="${isDoctor}" th:text="${nombres[cita.idPaciente]}"></td>
                     <!-- Mostrar el nombre del doctor si el usuario no es doctor -->
