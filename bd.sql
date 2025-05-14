@@ -75,9 +75,15 @@ CREATE TABLE mensajes_chat (
 INSERT INTO roles (nombre) VALUES ('ROLE_ADMIN'), ('ROLE_USER'), ('ROLE_DOCTOR');
 
 INSERT INTO usuarios (nombre, email, password) VALUES
-('Dr. Juan Pérez', 'juan.perez@hospital.com', '123'),
-('Dra. María López', 'maria.lopez@hospital.com', '123'),
-('Dr. Carlos García', 'carlos.garcia@hospital.com', '123');
+('Dr. Juan Perez', 'juan.perez@hospital.com', '123'),
+('Dra. Maria Lopez', 'maria.lopez@hospital.com', '123'),
+('Dr. Carlos Garcia', 'carlos.garcia@hospital.com', '123');
+
+INSERT INTO usuario_roles (usuario_id, rol_id)
+SELECT u.id, r.id
+FROM usuarios u, roles r
+WHERE u.email IN ('juan.perez@hospital.com', 'maria.lopez@hospital.com', 'carlos.garcia@hospital.com')
+  AND r.nombre = 'ROLE_DOCTOR';
 
 DROP USER IF EXISTS 'admin'@'localhost';
 FLUSH PRIVILEGES;
@@ -99,11 +105,7 @@ SELECT * FROM mensajes_chat;
 INSERT INTO usuario_roles (usuario_id, rol_id)
 VALUES (5, 3);
 ALTER TABLE citas ADD COLUMN fecha_proxima_cita DATE;
-INSERT INTO usuario_roles (usuario_id, rol_id)
-SELECT u.id, r.id
-FROM usuarios u, roles r
-WHERE u.email IN ('juan.perez@hospital.com', 'maria.lopez@hospital.com', 'carlos.garcia@hospital.com')
-  AND r.nombre = 'ROLE_DOCTOR';
+
 
 INSERT INTO usuario_roles (usuario_id, rol_id)
 SELECT u.id, r.id
