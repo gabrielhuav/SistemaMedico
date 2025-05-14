@@ -73,6 +73,12 @@ CREATE TABLE mensajes_chat (
 );
 
 INSERT INTO roles (nombre) VALUES ('ROLE_ADMIN'), ('ROLE_USER'), ('ROLE_DOCTOR');
+
+INSERT INTO usuarios (nombre, email, password) VALUES
+('Dr. Juan Pérez', 'juan.perez@hospital.com', '123'),
+('Dra. María López', 'maria.lopez@hospital.com', '123'),
+('Dr. Carlos García', 'carlos.garcia@hospital.com', '123');
+
 DROP USER IF EXISTS 'admin'@'localhost';
 FLUSH PRIVILEGES;
 
@@ -81,10 +87,7 @@ GRANT ALL PRIVILEGES ON sistemamedico.* TO 'admin'@'localhost';
 FLUSH PRIVILEGES;
 
 -- Insertar usuarios doctores
-INSERT INTO usuarios (nombre, email, password) VALUES
-('Dr. Juan Pérez', 'juan.perez@hospital.com', 'hashed_password_1'),
-('Dra. María López', 'maria.lopez@hospital.com', 'hashed_password_2'),
-('Dr. Carlos García', 'carlos.garcia@hospital.com', 'hashed_password_3');
+
 
 -- Asignar el rol de doctor a los usuarios insertados usando el email
 SELECT * FROM usuarios;
