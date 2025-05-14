@@ -20,7 +20,21 @@ public class SecurityConfig {
             .authorizeHttpRequests((requests) -> requests
             .requestMatchers("/api/auth/**").permitAll()  // Permitir acceso sin autenticación a la app móvil
             .requestMatchers("/admin").hasRole("ADMIN")  // Acceso solo para usuarios con rol ADMIN a la ruta /admin
+            .requestMatchers("/verUsuarios").hasRole("ADMIN")  // Acceso solo para usuarios con rol ADMIN a la ruta /admin
             .requestMatchers("/perfil").authenticated()
+            .requestMatchers("/citas").authenticated()
+            .requestMatchers("/consultas").authenticated()
+            .requestMatchers("/consultas/paciente").authenticated()  // Solo los pacientes pueden ver sus consultas
+            .requestMatchers("/notificaciones").authenticated()
+            .requestMatchers("/ticket").authenticated()
+            .requestMatchers("/chat").authenticated()
+            .requestMatchers("/agconsulta").authenticated()
+            .requestMatchers("/agendar").authenticated()
+            .requestMatchers("/lista").authenticated()
+            .requestMatchers("/calendario").authenticated()
+
+
+
            // .requestMatchers("/admin/eliminar/**").hasRole("ADMIN")  // Permite que los usuarios autenticados puedan eliminar registros
             .requestMatchers("/home").authenticated()  // Requiere autenticación para acceder a /home
             .requestMatchers("/consultas/registrar").hasRole("DOCTOR")  // Solo los doctores pueden registrar consultas
