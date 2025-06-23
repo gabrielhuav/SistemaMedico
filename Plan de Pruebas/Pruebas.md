@@ -2,7 +2,7 @@
 
 ## 1. Objetivo del Plan de Pruebas
 
-El objetivo principal de este plan de pruebas es evaluar el desempeño, la robustez y la capacidad de respuesta del sistema backend a través de pruebas de carga y funcionales utilizando Apache JMeter. Se busca identificar posibles cuellos de botella, errores en la lógica de negocio (por ejemplo, registro y login de usuarios) y comprobar el manejo adecuado de múltiples solicitudes concurrentes.
+El objetivo principal de este plan de pruebas es evaluar el desempeño y la capacidad de respuesta del sistema backend a través de pruebas de carga y funcionales utilizando Apache JMeter. Se busca identificar posibles cuellos de botella, errores en la lógica de negocio (por ejemplo, registro y login de usuarios) y comprobar el manejo adecuado de múltiples solicitudes concurrentes.
 
 ---
 
@@ -37,7 +37,7 @@ El objetivo principal de este plan de pruebas es evaluar el desempeño, la robus
 #### 3.1.1 Prueba de Registro de Usuario (`/api/register`)
 - **Propósito:** Validar la creación masiva de usuarios y la correcta respuesta del sistema ante datos únicos y repetidos.
 - **Parámetros configurados en JMeter:**
-  - Número de usuarios (hilos): 20-50
+  - Número de usuarios (hilos): 5000
   - Datos de usuario dinámicos (email único por hilo)
   - Verificación de respuestas exitosas y manejo de errores (email ya existente)
 
@@ -76,17 +76,7 @@ El objetivo principal de este plan de pruebas es evaluar el desempeño, la robus
 - Al menos el 95% de las solicitudes deben ser exitosas bajo la carga esperada.
 - Los usuarios deben ser creados y autenticados correctamente.
 - Los tiempos de respuesta deben estar dentro de los límites aceptables según los requisitos del sistema.
-- Los errores deben ser manejados y reportados adecuadamente por el sistema.
 
 ---
 
-## 6. Limpieza y Reinicio de Escenarios
 
-- Limpieza de usuarios creados en la base de datos mediante consultas SQL para repetir las pruebas con los mismos datos.
-- Alternativamente, generación de nuevos usuarios con datos únicos en cada ejecución.
-
----
-
-**Autor:**  
-Brandonttt  
-**Fecha:** 2025-06-23
