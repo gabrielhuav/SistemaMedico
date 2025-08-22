@@ -74,16 +74,41 @@ CREATE TABLE mensajes_chat (
 
 INSERT INTO roles (nombre) VALUES ('ROLE_ADMIN'), ('ROLE_USER'), ('ROLE_DOCTOR');
 
-INSERT INTO usuarios (nombre, email, password) VALUES
-('Dr. Juan Perez', 'juan.perez@hospital.com', '123'),
-('Dra. Maria Lopez', 'maria.lopez@hospital.com', '123'),
-('Dr. Carlos Garcia', 'carlos.garcia@hospital.com', '123');
+-- Trigger para asignar automáticamente roles según el dominio del email
+DELIMITER $$
+CREATE TRIGGER auto_assign_roles_by_email 
+AFTER INSERT ON usuarios
+FOR EACH ROW 
+BEGIN
+    -- Si el email termina en @admin.com, asignar rol ADMIN
+    IF NEW.email REGEXP '.*@admin\\.com$' THEN
+        INSERT IGNORE INTO usuario_roles (usuario_id, rol_id)
+        SELECT NEW.id, r.id 
+        FROM roles r 
+        WHERE r.nombre = 'ROLE_ADMIN';
+    END IF;
+    
+    -- Si el email termina en @doctor.com, asignar rol DOCTOR
+    IF NEW.email REGEXP '.*@doctor\\.com$' THEN
+        INSERT IGNORE INTO usuario_roles (usuario_id, rol_id)
+        SELECT NEW.id, r.id 
+        FROM roles r 
+        WHERE r.nombre = 'ROLE_DOCTOR';
+    END IF;
+    
+    -- Si no coincide con ningún patrón especial, asignar rol USER por defecto
+    IF NOT (NEW.email REGEXP '.*@admin\\.com$' OR NEW.email REGEXP '.*@doctor\\.com$') THEN
+        INSERT IGNORE INTO usuario_roles (usuario_id, rol_id)
+        SELECT NEW.id, r.id 
+        FROM roles r 
+        WHERE r.nombre = 'ROLE_USER';
+    END IF;
+END$$
+DELIMITER ;
 
-INSERT INTO usuario_roles (usuario_id, rol_id)
-SELECT u.id, r.id
-FROM usuarios u, roles r
-WHERE u.email IN ('juan.perez@hospital.com', 'maria.lopez@hospital.com', 'carlos.garcia@hospital.com')
-  AND r.nombre = 'ROLE_DOCTOR';
+-- Los usuarios se crearán automáticamente vía registro con triggers
+
+-- Los roles se asignarán automáticamente vía triggers según el dominio del email
 
 DROP USER IF EXISTS 'admin'@'localhost';
 FLUSH PRIVILEGES;
@@ -92,24 +117,5 @@ CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
 GRANT ALL PRIVILEGES ON sistemamedico.* TO 'admin'@'localhost';
 FLUSH PRIVILEGES;
 
--- Insertar usuarios doctores
-
-
--- Asignar el rol de doctor a los usuarios insertados usando el email
-SELECT * FROM usuarios;
-SELECT * FROM roles;
-SELECT * FROM usuario_roles;
-SELECT * FROM citas;
-SELECT * FROM historial_medico;
-SELECT * FROM mensajes_chat;
-INSERT INTO usuario_roles (usuario_id, rol_id)
-VALUES (5, 3);
 ALTER TABLE citas ADD COLUMN fecha_proxima_cita DATE;
-
-
-INSERT INTO usuario_roles (usuario_id, rol_id)
-SELECT u.id, r.id
-FROM usuarios u, roles r
-WHERE u.email IN ('admin@gmail.com')
-  AND r.nombre = 'ROLE_ADMIN';
   
