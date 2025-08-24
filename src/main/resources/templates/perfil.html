@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -155,26 +154,48 @@
             background-color: #ffebee;
             color: #c62828;
         }
-        
-        #theme-toggle {
+
+        /* Estilos para los botones de configuración */
+        .config-buttons {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 1.5rem;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .config-btn {
             background: none;
             border: none;
+            font-size: 1.5rem;
             cursor: pointer;
-            z-index: 1030;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
             color: white;
+        }
+
+        .config-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        .dark-mode .config-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body>
-    <button id="theme-toggle" class="btn" aria-label="Cambiar tema">🌙</button>
+    <!-- Botones de configuración -->
+    <div class="config-buttons">
+        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+    </div>
     
     <header class="header mb-4 text-center">
         <div class="container">
-            <h1 class="display-5 fw-bold">Mi Perfil</h1>
+            <h1 class="display-5 fw-bold" data-i18n="my_profile">Mi Perfil</h1>
         </div>
     </header>
     
@@ -207,12 +228,12 @@
                         <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button" role="tab" aria-controls="password" aria-selected="true">
-                                    <i class="bi bi-key me-1"></i>Cambiar Contraseña
+                                    <i class="bi bi-key me-1"></i><span data-i18n="change_password">Cambiar Contraseña</span>
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="image-tab" data-bs-toggle="tab" data-bs-target="#image" type="button" role="tab" aria-controls="image" aria-selected="false">
-                                    <i class="bi bi-image me-1"></i>Cambiar Imagen
+                                    <i class="bi bi-image me-1"></i><span data-i18n="change_image">Cambiar Imagen</span>
                                 </button>
                             </li>
                         </ul>
@@ -222,26 +243,29 @@
                             <div class="tab-pane fade show active" id="password" role="tabpanel" aria-labelledby="password-tab">
                                 <form action="/perfil/actualizar-password" method="post">
                                     <div class="mb-3">
-                                        <label for="password" class="form-label">Nueva Contraseña</label>
-                                        <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu nueva contraseña" required />
+                                        <label for="password" class="form-label" data-i18n="new_password">Nueva Contraseña</label>
+                                        <input type="password" class="form-control" id="password" name="password" 
+                                               data-i18n-placeholder="new_password_placeholder" placeholder="Ingresa tu nueva contraseña" required />
                                     </div>
                                     
                                     <div class="mb-3">
-                                        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
-                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirma tu nueva contraseña" required />
+                                        <label for="confirmPassword" class="form-label" data-i18n="confirm_password">Confirmar Contraseña</label>
+                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
+                                               data-i18n-placeholder="confirm_password_placeholder" placeholder="Confirma tu nueva contraseña" required />
                                     </div>
                                     
                                     <div class="mb-4">
-                                        <label for="currentPassword" class="form-label">Contraseña Actual</label>
-                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="Ingresa tu contraseña actual" required />
+                                        <label for="currentPassword" class="form-label" data-i18n="current_password">Contraseña Actual</label>
+                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" 
+                                               data-i18n-placeholder="current_password_placeholder" placeholder="Ingresa tu contraseña actual" required />
                                     </div>
                                     
                                     <div class="d-flex justify-content-between">
                                         <a href="/home" class="btn btn-outline-secondary">
-                                            <i class="bi bi-arrow-left me-1"></i>Volver
+                                            <i class="bi bi-arrow-left me-1"></i><span data-i18n="back">Volver</span>
                                         </a>
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="bi bi-check-lg me-1"></i>Guardar Cambios
+                                            <i class="bi bi-check-lg me-1"></i><span data-i18n="save_changes">Guardar Cambios</span>
                                         </button>
                                     </div>
                                 </form>
@@ -251,16 +275,16 @@
                             <div class="tab-pane fade" id="image" role="tabpanel" aria-labelledby="image-tab">
                                 <form action="/perfil/actualizar-imagen" method="post" enctype="multipart/form-data">
                                     <div class="mb-4">
-                                        <label for="imagenPerfil" class="form-label">Selecciona una nueva imagen de perfil</label>
+                                        <label for="imagenPerfil" class="form-label" data-i18n="select_profile_image">Selecciona una nueva imagen de perfil</label>
                                         <input type="file" class="form-control" id="imagenPerfil" name="imagen" accept="image/*" required />
                                     </div>
                                     
                                     <div class="d-flex justify-content-between">
                                         <a href="/home" class="btn btn-outline-secondary">
-                                            <i class="bi bi-arrow-left me-1"></i>Volver
+                                            <i class="bi bi-arrow-left me-1"></i><span data-i18n="back">Volver</span>
                                         </a>
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="bi bi-upload me-1"></i>Subir Imagen
+                                            <i class="bi bi-upload me-1"></i><span data-i18n="upload_image">Subir Imagen</span>
                                         </button>
                                     </div>
                                 </form>
@@ -279,6 +303,98 @@
     <!-- Bootstrap JS y Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- Sistema de idiomas embebido -->
+    <script>
+        const languages = {
+            es: {
+                "my_profile": "Mi Perfil",
+                "change_password": "Cambiar Contraseña",
+                "change_image": "Cambiar Imagen",
+                "new_password": "Nueva Contraseña",
+                "new_password_placeholder": "Ingresa tu nueva contraseña",
+                "confirm_password": "Confirmar Contraseña",
+                "confirm_password_placeholder": "Confirma tu nueva contraseña",
+                "current_password": "Contraseña Actual",
+                "current_password_placeholder": "Ingresa tu contraseña actual",
+                "back": "Volver",
+                "save_changes": "Guardar Cambios",
+                "select_profile_image": "Selecciona una nueva imagen de perfil",
+                "upload_image": "Subir Imagen"
+            },
+            en: {
+                "my_profile": "My Profile",
+                "change_password": "Change Password",
+                "change_image": "Change Image",
+                "new_password": "New Password",
+                "new_password_placeholder": "Enter your new password",
+                "confirm_password": "Confirm Password",
+                "confirm_password_placeholder": "Confirm your new password",
+                "current_password": "Current Password",
+                "current_password_placeholder": "Enter your current password",
+                "back": "Back",
+                "save_changes": "Save Changes",
+                "select_profile_image": "Select a new profile image",
+                "upload_image": "Upload Image"
+            }
+        };
+
+        // Gestor de internacionalización
+        class I18nManager {
+            constructor() {
+                this.currentLanguage = localStorage.getItem('language') || 'es';
+                this.loadLanguage();
+            }
+
+            loadLanguage() {
+                this.updateTexts();
+                this.updateLanguageToggle();
+                this.updatePageTitle();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+                localStorage.setItem('language', this.currentLanguage);
+                this.updateTexts();
+                this.updateLanguageToggle();
+                this.updatePageTitle();
+            }
+
+            updateTexts() {
+                const texts = languages[this.currentLanguage];
+                
+                // Actualizar elementos con data-i18n
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (texts[key]) {
+                        element.textContent = texts[key];
+                    }
+                });
+
+                // Actualizar placeholders
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-placeholder');
+                    if (texts[key]) {
+                        element.placeholder = texts[key];
+                    }
+                });
+            }
+
+            updateLanguageToggle() {
+                const languageToggle = document.getElementById('languageToggle');
+                if (languageToggle) {
+                    languageToggle.textContent = this.currentLanguage === 'es' ? '🇺🇸' : '🇪🇸';
+                    languageToggle.title = this.currentLanguage === 'es' ? 'English' : 'Español';
+                }
+            }
+
+            updatePageTitle() {
+                document.title = this.currentLanguage === 'es' 
+                    ? 'Mi Perfil - Sistema Médico' 
+                    : 'My Profile - Medical System';
+            }
+        }
+    </script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Referencias a elementos
@@ -286,7 +402,7 @@
             const header = document.querySelector('.header');
             const profileCard = document.querySelector('.profile-card');
             const profileImage = document.querySelector('.profile-image');
-            const themeToggle = document.getElementById('theme-toggle');
+            const themeToggle = document.getElementById('themeToggle');
             
             // Cargar estado del modo oscuro desde localStorage
             if (localStorage.getItem('darkMode') === 'enabled') {
@@ -305,6 +421,14 @@
                 profileImage.classList.toggle('dark-mode');
                 themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
                 localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            });
+
+            // Inicializar sistema de idiomas
+            const i18n = new I18nManager();
+            
+            // Event listener para el botón de idioma
+            document.getElementById('languageToggle').addEventListener('click', () => {
+                i18n.toggleLanguage();
             });
             
             // Cargar la imagen de perfil

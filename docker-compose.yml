@@ -9,11 +9,14 @@ services:
     ports:
       - "8086:8086"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
+      - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/sistemamedico?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     networks:
       - app-network
     restart: always
@@ -34,6 +37,12 @@ services:
     networks:
       - app-network
     restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "admin", "-padmin"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+      start_period: 40s
 
 networks:
   app-network:

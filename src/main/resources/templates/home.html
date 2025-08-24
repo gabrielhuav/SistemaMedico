@@ -20,23 +20,12 @@
         }
 
         .navbar {
-            background-color: #00796b; /* Verde hospital */
+            background-color: #00796b;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .navbar.dark-mode {
             background-color: #004d40;
-        }
-
-        .theme-toggle {
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: white;
-            transition: color 0.3s;
-        }
-
-        .theme-toggle.dark-mode {
-            color: #c8e6c9;
         }
 
         .container {
@@ -62,7 +51,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s, color 0.3s;
         }
-
 
         .btn-primary {
             background-color: #00796b;
@@ -121,34 +109,61 @@
         .footer.dark-mode {
             background-color: #004d40;
         }
+
+        /* Estilos para los botones de configuración */
+        .config-buttons {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .config-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .config-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
+    <!-- Botones de configuración -->
+    <div class="config-buttons">
+        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Sistema Médico</a>
+            <a class="navbar-brand" href="#" data-i18n="medical_system">Sistema Médico</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-
                     <li class="nav-item position-relative" style="margin-top: 10px;">
                         <a href="/notificaciones" class="btn btn-primary btn-sm d-flex align-items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
                                 <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
                             </svg>
-                            Notificaciones
+                            <span data-i18n="notifications">Notificaciones</span>
                         </a>
                         <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
                             0
                         </span>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <span id="themeToggle" class="theme-toggle nav-link">🌙</span>
                     </li>
                 </ul>
             </div>
@@ -158,93 +173,192 @@
     <!-- Hero Section -->
     <div class="container">
         <div class="hero-section">
-            <h1>Bienvenido al Sistema Médico</h1>
-            <p>Gestiona tus citas, calendario y perfil de manera eficiente.</p>
+            <h1 data-i18n="welcome_medical_system">Bienvenido al Sistema Médico</h1>
+            <p data-i18n="manage_appointments">Gestiona tus citas, calendario y perfil de manera eficiente.</p>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="container">
         <div class="card p-4 text-center">
-            <h2 class="mb-4">Hola, <span th:text="${nombreUsuario}" style="color: #00796b;">Paciente</span></h2>
-            <p class="mb-4" style="font-size: 1.2rem;">Selecciona una opción para continuar:</p>
+            <h2 class="mb-4"><span data-i18n="hello">Hola</span>, <span th:text="${nombreUsuario}" style="color: #00796b;">Paciente</span></h2>
+            <p class="mb-4" style="font-size: 1.2rem;" data-i18n="select_option">Selecciona una opción para continuar:</p>
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body text-center">
-                            <h5 class="card-title">Citas</h5>
-                            <p class="card-text">Consulta y gestiona tus citas médicas fácilmente.</p>
-                            <a href="/citas" class="btn btn-primary">Ir a Citas</a>
+                            <h5 class="card-title" data-i18n="appointments">Citas</h5>
+                            <p class="card-text" data-i18n="manage_appointments_desc">Consulta y gestiona tus citas médicas fácilmente.</p>
+                            <a href="/citas" class="btn btn-primary" data-i18n="go_to_appointments">Ir a Citas</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body text-center">
-                            <h5 class="card-title">Calendario</h5>
-                            <p class="card-text">Visualiza tus citas en un calendario interactivo.</p>
-                            <a href="/calendario" class="btn btn-primary">Ir al Calendario</a>
+                            <h5 class="card-title" data-i18n="calendar">Calendario</h5>
+                            <p class="card-text" data-i18n="calendar_desc">Visualiza tus citas en un calendario interactivo.</p>
+                            <a href="/calendario" class="btn btn-primary" data-i18n="go_to_calendar">Ir al Calendario</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body text-center">
-                            <h5 class="card-title">Mi Perfil</h5>
-                            <p class="card-text">Actualiza tu información personal y médica.</p>
-                            <a href="/perfil" class="btn btn-primary">Ir a Mi Perfil</a>
+                            <h5 class="card-title" data-i18n="my_profile">Mi Perfil</h5>
+                            <p class="card-text" data-i18n="profile_desc">Actualiza tu información personal y médica.</p>
+                            <a href="/perfil" class="btn btn-primary" data-i18n="go_to_profile">Ir a Mi Perfil</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body text-center">
-                            <h5 class="card-title">Consultas</h5>
-                            <p class="card-text">Revisa tus consultas médicas y su historial.</p>
-                            <a href="/consultas" class="btn btn-primary">Ir a Consultas</a>
+                            <h5 class="card-title" data-i18n="consultations">Consultas</h5>
+                            <p class="card-text" data-i18n="consultations_desc">Revisa tus consultas médicas y su historial.</p>
+                            <a href="/consultas" class="btn btn-primary" data-i18n="go_to_consultations">Ir a Consultas</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body text-center">
-                            <h5 class="card-title">Chat</h5>
-                            <p class="card-text">Comunícate con tu médico de manera directa.</p>
-                            <a href="/chat" class="btn btn-primary">Ir al Chat</a>
+                            <h5 class="card-title" data-i18n="chat">Chat</h5>
+                            <p class="card-text" data-i18n="chat_desc">Comunícate con tu médico de manera directa.</p>
+                            <a href="/chat" class="btn btn-primary" data-i18n="go_to_chat">Ir al Chat</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4" th:if="${isAdmin}">
                     <div class="card shadow-sm border-0">
                         <div class="card-body text-center">
-                            <h5 class="card-title">Administrador</h5>
-                            <p class="card-text">Gestiona usuarios y configuraciones del sistema.</p>
-                            <a href="/admin" class="btn btn-primary">Ir al Administrador</a>
+                            <h5 class="card-title" data-i18n="administrator">Administrador</h5>
+                            <p class="card-text" data-i18n="admin_desc">Gestiona usuarios y configuraciones del sistema.</p>
+                            <a href="/admin" class="btn btn-primary" data-i18n="go_to_admin">Ir al Administrador</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="mt-4">
-                <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+                <a href="/logout" class="btn btn-danger" data-i18n="logout">Cerrar Sesión</a>
             </div>
         </div>
     </div>
     <footer>
         <div class="footer">
-            <p>&copy; 2025 Sistema Médico. Todos los rechos reservados.</p>
+            <p data-i18n="copyright">&copy; 2025 Sistema Médico. Todos los derechos reservados.</p>
         </div>
     </footer>
-    <!-- Footer -->
-
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script de idiomas embebido -->
     <script>
-        // Referencias a elementos
+        const languages = {
+            es: {
+                "medical_system": "Sistema Médico",
+                "notifications": "Notificaciones",
+                "welcome_medical_system": "Bienvenido al Sistema Médico",
+                "manage_appointments": "Gestiona tus citas, calendario y perfil de manera eficiente.",
+                "hello": "Hola",
+                "select_option": "Selecciona una opción para continuar:",
+                "appointments": "Citas",
+                "manage_appointments_desc": "Consulta y gestiona tus citas médicas fácilmente.",
+                "go_to_appointments": "Ir a Citas",
+                "calendar": "Calendario",
+                "calendar_desc": "Visualiza tus citas en un calendario interactivo.",
+                "go_to_calendar": "Ir al Calendario",
+                "my_profile": "Mi Perfil",
+                "profile_desc": "Actualiza tu información personal y médica.",
+                "go_to_profile": "Ir a Mi Perfil",
+                "consultations": "Consultas",
+                "consultations_desc": "Revisa tus consultas médicas y su historial.",
+                "go_to_consultations": "Ir a Consultas",
+                "chat": "Chat",
+                "chat_desc": "Comunícate con tu médico de manera directa.",
+                "go_to_chat": "Ir al Chat",
+                "administrator": "Administrador",
+                "admin_desc": "Gestiona usuarios y configuraciones del sistema.",
+                "go_to_admin": "Ir al Administrador",
+                "logout": "Cerrar Sesión",
+                "copyright": "© 2025 Sistema Médico. Todos los derechos reservados."
+            },
+            en: {
+                "medical_system": "Medical System",
+                "notifications": "Notifications",
+                "welcome_medical_system": "Welcome to Medical System",
+                "manage_appointments": "Manage your appointments, calendar and profile efficiently.",
+                "hello": "Hello",
+                "select_option": "Select an option to continue:",
+                "appointments": "Appointments",
+                "manage_appointments_desc": "View and manage your medical appointments easily.",
+                "go_to_appointments": "Go to Appointments",
+                "calendar": "Calendar",
+                "calendar_desc": "View your appointments in an interactive calendar.",
+                "go_to_calendar": "Go to Calendar",
+                "my_profile": "My Profile",
+                "profile_desc": "Update your personal and medical information.",
+                "go_to_profile": "Go to My Profile",
+                "consultations": "Consultations",
+                "consultations_desc": "Review your medical consultations and history.",
+                "go_to_consultations": "Go to Consultations",
+                "chat": "Chat",
+                "chat_desc": "Communicate with your doctor directly.",
+                "go_to_chat": "Go to Chat",
+                "administrator": "Administrator",
+                "admin_desc": "Manage users and system settings.",
+                "go_to_admin": "Go to Administrator",
+                "logout": "Logout",
+                "copyright": "© 2025 Medical System. All rights reserved."
+            }
+        };
+
+        // Gestor de internacionalización
+        class I18nManager {
+            constructor() {
+                this.currentLanguage = localStorage.getItem('language') || 'es';
+                this.loadLanguage();
+            }
+
+            loadLanguage() {
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+                localStorage.setItem('language', this.currentLanguage);
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            updateTexts() {
+                const texts = languages[this.currentLanguage];
+                
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (texts[key]) {
+                        element.textContent = texts[key];
+                    }
+                });
+
+                document.title = this.currentLanguage === 'es' ? 'Sistema Médico' : 'Medical System';
+            }
+
+            updateLanguageToggle() {
+                const languageToggle = document.getElementById('languageToggle');
+                if (languageToggle) {
+                    languageToggle.textContent = this.currentLanguage === 'es' ? '🇺🇸' : '🇪🇸';
+                    languageToggle.title = this.currentLanguage === 'es' ? 'English' : 'Español';
+                }
+            }
+        }
+
+        // Modo oscuro
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
     
-        // Cargar estado del modo oscuro desde localStorage
         if (localStorage.getItem('darkMode') === 'enabled') {
             body.classList.add('dark-mode');
             themeToggle.textContent = '☀️';
@@ -254,49 +368,46 @@
             document.querySelectorAll('.card-body').forEach(card => card.classList.add('dark-mode'));
         }
     
-        // Alternar modo oscuro y guardar estado en localStorage
         themeToggle.addEventListener('click', () => {
             const isDarkMode = body.classList.toggle('dark-mode');
             themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
-    
-            // Cambiar clases de elementos específicos
             document.querySelector('.navbar').classList.toggle('dark-mode');
             document.querySelector('.footer').classList.toggle('dark-mode');
             document.querySelector('.card').classList.toggle('dark-mode');
             document.querySelectorAll('.card-body').forEach(card => {
-            if (isDarkMode) {
-                card.classList.add('dark-mode');
-            } else {
-                card.classList.remove('dark-mode');
-            }
-        });
-    
-            // Guardar estado en localStorage
+                if (isDarkMode) {
+                    card.classList.add('dark-mode');
+                } else {
+                    card.classList.remove('dark-mode');
+                }
+            });
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
         });
-    </script>
-    <script>
+
+        // Inicializar sistema de idiomas
+        const i18n = new I18nManager();
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            i18n.toggleLanguage();
+        });
+
+        // Script de notificaciones (mantener funcionalidad existente)
         document.addEventListener('DOMContentLoaded', function () {
-            // Función para actualizar el contador de notificaciones
             function actualizarContadorNotificaciones() {
-                fetch('/notificaciones/nuevas') // Endpoint para obtener el número de notificaciones no leídas
+                fetch('/notificaciones/nuevas')
                     .then(response => response.json())
                     .then(data => {
                         const notificationCount = document.getElementById('notificationCount');
                         if (data.nuevas > 0) {
                             notificationCount.textContent = data.nuevas;
-                            notificationCount.style.display = 'inline'; // Mostrar el contador si hay notificaciones
+                            notificationCount.style.display = 'inline';
                         } else {
-                            notificationCount.style.display = 'none'; // Ocultar el contador si no hay notificaciones
+                            notificationCount.style.display = 'none';
                         }
                     })
                     .catch(error => console.error('Error al obtener notificaciones:', error));
             }
     
-            // Llamar a la función al cargar la página
             actualizarContadorNotificaciones();
-    
-            // Actualizar el contador cada 30 segundos
             setInterval(actualizarContadorNotificaciones, 30000);
         });
     </script>

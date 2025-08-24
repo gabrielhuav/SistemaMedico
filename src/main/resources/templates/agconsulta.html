@@ -23,7 +23,7 @@
 
         .container {
             max-width: 600px;
-            margin: 50px auto;
+            margin: 80px auto; /* Margen superior aumentado para los botones */
             background: #fff;
             padding: 20px;
             border-radius: 8px;
@@ -89,77 +89,157 @@
             background-color: #455a64;
         }
 
-        .theme-toggle {
+        /* Estilos para los botones de configuración */
+        .config-buttons {
             position: fixed;
             top: 10px;
             right: 10px;
-            background-color: #007bff;
-            color: white;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .config-btn {
+            background: none;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: background-color 0.3s;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
         }
 
-        .theme-toggle:hover {
-            background-color: #0056b3;
+        .config-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
         }
 
-        .dark-mode .theme-toggle {
-            background-color: #37474f;
-        }
-
-        .dark-mode .theme-toggle:hover {
-            background-color: #455a64;
+        .dark-mode .config-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" id="themeToggle">🌙</button>
+    <!-- Botones de configuración -->
+    <div class="config-buttons">
+        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+    </div>
+
     <div class="container">
-        <h1>Agregar Consulta</h1>
+        <h1 data-i18n="add_consultation">Agregar Consulta</h1>
         <form id="consultaForm" action="/consultas/guardar" method="POST">
             <!-- Campo oculto para el ID del paciente -->
-            <input type="hidden" name="idCita" th:value="${idCita}"> <!-- ID de la cita -->
+            <input type="hidden" name="idCita" th:value="${idCita}"> 
             <input type="hidden" name="idPaciente" th:value="${idPaciente}">
-        
-            <!-- Campo oculto para el ID del doctor -->
             <input type="hidden" name="idDoctor" th:value="${idDoctor}">
         
             <!-- Campo para la fecha y hora de la consulta -->
-            <label for="fechaHora">Fecha y Hora:</label>
+            <label for="fechaHora" data-i18n="date_time">Fecha y Hora:</label>
             <input type="datetime-local" id="fechaHora" name="fechaHora" required>
         
             <!-- Campo para los síntomas -->
-            <label for="sintomas">Síntomas:</label>
+            <label for="sintomas" data-i18n="symptoms">Síntomas:</label>
             <textarea id="sintomas" name="sintomas" rows="4" required></textarea>
         
             <!-- Campo para los medicamentos -->
-            <label for="medicamentos">Medicamentos:</label>
+            <label for="medicamentos" data-i18n="medications">Medicamentos:</label>
             <textarea id="medicamentos" name="medicamentos" rows="4"></textarea>
         
             <!-- Campo para la dosis -->
-            <label for="dosis">Dosis:</label>
+            <label for="dosis" data-i18n="dosage">Dosis:</label>
             <textarea id="dosis" name="dosis" rows="2"></textarea>
         
             <!-- Campo para la fecha de la próxima cita -->
-            <label for="fechaProximaCita">Fecha de la Próxima Cita:</label>
+            <label for="fechaProximaCita" data-i18n="next_appointment_date">Fecha de la Próxima Cita:</label>
             <input type="date" id="fechaProximaCita" name="fechaProximaCita">
 
-            <label for="estado">Estado:</label>
+            <label for="estado" data-i18n="status">Estado:</label>
             <select id="estado" name="estado" required>
-                <option value="pendiente">Pendiente</option>
-                <option value="confirmada">Confirmada</option>
-                <option value="cancelada">Cancelada</option>
+                <option value="pendiente" data-i18n="pending">Pendiente</option>
+                <option value="confirmada" data-i18n="confirmed">Confirmada</option>
+                <option value="cancelada" data-i18n="cancelled">Cancelada</option>
             </select>
         
             <!-- Botón para guardar -->
-            <button type="button" id="guardarConsultaBtn">Guardar Consulta</button>
+            <button type="button" id="guardarConsultaBtn" data-i18n="save_consultation">Guardar Consulta</button>
         </form>
     </div>
 
+    <!-- Script de idiomas embebido -->
     <script>
+        const languages = {
+            es: {
+                "add_consultation": "Agregar Consulta",
+                "date_time": "Fecha y Hora:",
+                "symptoms": "Síntomas:",
+                "medications": "Medicamentos:",
+                "dosage": "Dosis:",
+                "next_appointment_date": "Fecha de la Próxima Cita:",
+                "status": "Estado:",
+                "pending": "Pendiente",
+                "confirmed": "Confirmada",
+                "cancelled": "Cancelada",
+                "save_consultation": "Guardar Consulta"
+            },
+            en: {
+                "add_consultation": "Add Consultation",
+                "date_time": "Date and Time:",
+                "symptoms": "Symptoms:",
+                "medications": "Medications:",
+                "dosage": "Dosage:",
+                "next_appointment_date": "Next Appointment Date:",
+                "status": "Status:",
+                "pending": "Pending",
+                "confirmed": "Confirmed",
+                "cancelled": "Cancelled",
+                "save_consultation": "Save Consultation"
+            }
+        };
+
+        // Gestor de internacionalización
+        class I18nManager {
+            constructor() {
+                this.currentLanguage = localStorage.getItem('language') || 'es';
+                this.loadLanguage();
+            }
+
+            loadLanguage() {
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+                localStorage.setItem('language', this.currentLanguage);
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            updateTexts() {
+                const texts = languages[this.currentLanguage];
+                
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (texts[key]) {
+                        element.textContent = texts[key];
+                    }
+                });
+
+                document.title = this.currentLanguage === 'es' 
+                    ? 'Agregar Consulta' 
+                    : 'Add Consultation';
+            }
+
+            updateLanguageToggle() {
+                const languageToggle = document.getElementById('languageToggle');
+                if (languageToggle) {
+                    languageToggle.textContent = this.currentLanguage === 'es' ? '🇺🇸' : '🇪🇸';
+                    languageToggle.title = this.currentLanguage === 'es' ? 'English' : 'Español';
+                }
+            }
+        }
+
         // Referencias a elementos
         const themeToggle = document.getElementById('themeToggle');
         const body = document.body;
@@ -183,7 +263,7 @@
 
         // Confirmación al guardar
         document.getElementById('guardarConsultaBtn').addEventListener('click', function (event) {
-            event.preventDefault(); // Evita el envío inmediato del formulario
+            event.preventDefault();
 
             Swal.fire({
                 title: '¿Estás seguro?',
@@ -196,10 +276,15 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Enviar el formulario si el usuario confirma
                     document.getElementById('consultaForm').submit();
                 }
             });
+        });
+
+        // Inicializar sistema de idiomas
+        const i18n = new I18nManager();
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            i18n.toggleLanguage();
         });
     </script>
 </body>

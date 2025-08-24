@@ -4,12 +4,262 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Usuario</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .user-details-container {
+            background-color: #ffffff;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .user-details-container.dark-mode {
+            background-color: #1e272e;
+            color: #ffffff;
+        }
+
+        h1 {
+            color: #00796b;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        h1.dark-mode {
+            color: #80cbc4;
+        }
+
+        .detail-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #00796b;
+        }
+
+        .detail-item.dark-mode {
+            background-color: #2c2c2c;
+            border-left-color: #80cbc4;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-label.dark-mode {
+            color: #ced4da;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            color: #212529;
+        }
+
+        .detail-value.dark-mode {
+            color: #ffffff;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #00796b;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+            width: 100%;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #004d40;
+            transform: translateY(-2px);
+        }
+
+        .btn.dark-mode {
+            background-color: #37474f;
+        }
+
+        .btn.dark-mode:hover {
+            background-color: #455a64;
+        }
+
+        /* Estilos para los botones de configuración */
+        .config-buttons {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .config-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .config-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        .dark-mode .config-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
 <body>
-    <h1>Detalles del Usuario</h1>
-    <p>ID: <span th:text="${usuario.id}"></span></p>
-    <p>Nombre: <span th:text="${usuario.nombre}"></span></p>
-    <p>Email: <span th:text="${usuario.email}"></span></p>
-    <a href="/admin/usuarios">Volver a la lista de usuarios</a>
+    <!-- Botones de configuración -->
+    <div class="config-buttons">
+        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+    </div>
+
+    <div class="user-details-container">
+        <h1 data-i18n="user_details">Detalles del Usuario</h1>
+        
+        <div class="detail-item">
+            <div class="detail-label" data-i18n="id">ID:</div>
+            <div class="detail-value" th:text="${usuario.id}">123</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label" data-i18n="name">Nombre:</div>
+            <div class="detail-value" th:text="${usuario.nombre}">Juan Pérez</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label" data-i18n="email">Email:</div>
+            <div class="detail-value" th:text="${usuario.email}">juan@ejemplo.com</div>
+        </div>
+        
+        <a href="/admin/usuarios" class="btn" data-i18n="back_to_user_list">Volver a la lista de usuarios</a>
+    </div>
+
+    <!-- Script de idiomas embebido -->
+    <script>
+        const languages = {
+            es: {
+                "user_details": "Detalles del Usuario",
+                "id": "ID:",
+                "name": "Nombre:",
+                "email": "Email:",
+                "back_to_user_list": "Volver a la lista de usuarios"
+            },
+            en: {
+                "user_details": "User Details",
+                "id": "ID:",
+                "name": "Name:",
+                "email": "Email:",
+                "back_to_user_list": "Back to user list"
+            }
+        };
+
+        // Gestor de internacionalización
+        class I18nManager {
+            constructor() {
+                this.currentLanguage = localStorage.getItem('language') || 'es';
+                this.loadLanguage();
+            }
+
+            loadLanguage() {
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+                localStorage.setItem('language', this.currentLanguage);
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            updateTexts() {
+                const texts = languages[this.currentLanguage];
+                
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (texts[key]) {
+                        element.textContent = texts[key];
+                    }
+                });
+
+                document.title = this.currentLanguage === 'es' ? 'Ver Usuario' : 'View User';
+            }
+
+            updateLanguageToggle() {
+                const languageToggle = document.getElementById('languageToggle');
+                if (languageToggle) {
+                    languageToggle.textContent = this.currentLanguage === 'es' ? '🇺🇸' : '🇪🇸';
+                    languageToggle.title = this.currentLanguage === 'es' ? 'English' : 'Español';
+                }
+            }
+        }
+
+        // Modo oscuro
+        const body = document.body;
+        const container = document.querySelector('.user-details-container');
+        const themeToggle = document.getElementById('themeToggle');
+
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            container.classList.add('dark-mode');
+            document.querySelector('h1').classList.add('dark-mode');
+            document.querySelectorAll('.detail-item').forEach(item => item.classList.add('dark-mode'));
+            document.querySelectorAll('.detail-label').forEach(label => label.classList.add('dark-mode'));
+            document.querySelectorAll('.detail-value').forEach(value => value.classList.add('dark-mode'));
+            document.querySelector('.btn').classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            container.classList.toggle('dark-mode');
+            document.querySelector('h1').classList.toggle('dark-mode');
+            document.querySelectorAll('.detail-item').forEach(item => item.classList.toggle('dark-mode'));
+            document.querySelectorAll('.detail-label').forEach(label => label.classList.toggle('dark-mode'));
+            document.querySelectorAll('.detail-value').forEach(value => value.classList.toggle('dark-mode'));
+            document.querySelector('.btn').classList.toggle('dark-mode');
+            themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        });
+
+        // Inicializar sistema de idiomas
+        const i18n = new I18nManager();
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            i18n.toggleLanguage();
+        });
+    </script>
 </body>
 </html>

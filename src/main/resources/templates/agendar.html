@@ -21,7 +21,7 @@
 
         .container {
             max-width: 600px;
-            margin: 80px auto; /* Ajuste para que no se superponga con los botones superiores */
+            margin: 80px auto;
             background: #ffffff;
             padding: 30px;
             border-radius: 12px;
@@ -105,11 +105,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 40px; /* Aumentamos el padding horizontal */
+            padding: 10px 40px;
             position: fixed;
             top: 0;
             left: 0;
-            width: calc(100% - 80px); /* Ajustamos el ancho para compensar el padding */
+            width: calc(100% - 80px);
             background-color: transparent;
             z-index: 1000;
             box-shadow: none;
@@ -143,67 +143,163 @@
             background-color: #455a64;
         }
 
-        .top-buttons button {
-            font-size: 1.5rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.2s;
-            width: auto;
-            padding: 5px 10px;
-            margin-right: 10px; /* Añadimos un margen derecho */
+        /* Estilos para los botones de configuración */
+        .config-buttons {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
         }
 
-        .top-buttons button:hover {
-            transform: scale(1.2);
+        .config-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            width: auto;
+        }
+
+        .config-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        .dark-mode .config-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body>
+    <!-- Botones de configuración -->
+    <div class="config-buttons">
+        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+    </div>
+
     <div class="top-buttons">
         <!-- Botón para regresar al home -->
-        <a href="/home" id="home-button">Regresar</a>
-        <!-- Botón de cambio de tema -->
-        <button id="theme-toggle">🌙</button>
+        <a href="/home" id="home-button" data-i18n="back">Regresar</a>
+        <div></div> <!-- Espaciador -->
     </div>
 
     <div class="container">
-        <h1>Agendar Cita</h1>
+        <h1 data-i18n="schedule_appointment">Agendar Cita</h1>
         <form action="/citas/agendar" method="POST">
             <!-- Campo oculto para el ID del paciente -->
-            <input type="hidden" name="id_paciente" th:value="${usuarioActual.id}"> <!-- Este valor debe ser dinámico -->
+            <input type="hidden" name="id_paciente" th:value="${usuarioActual.id}">
 
             <!-- Selección del doctor -->
-            <label for="id_doctor">Selecciona un doctor:</label>
+            <label for="id_doctor" data-i18n="select_doctor">Selecciona un doctor:</label>
             <select name="id_doctor" id="id_doctor" required>
                 <!-- Estos valores deben ser generados dinámicamente desde el backend -->
                 <option th:each="doctor : ${doctores}" th:value="${doctor.id}" th:text="${doctor.nombre}"></option>
             </select>
 
             <!-- Selección de la fecha -->
-            <label for="fecha">Selecciona la fecha:</label>
+            <label for="fecha" data-i18n="select_date">Selecciona la fecha:</label>
             <input type="date" name="fecha" id="fecha" required>
 
             <!-- Selección de la hora -->
-            <label for="hora">Selecciona la hora:</label>
+            <label for="hora" data-i18n="select_time">Selecciona la hora:</label>
             <input type="time" name="hora" id="hora" required>
 
             <!-- Motivo de la cita -->
-            <label for="motivo">Motivo de la cita:</label>
-            <textarea name="motivo" id="motivo" rows="4" placeholder="Describe brevemente el motivo de la cita" required></textarea>
+            <label for="motivo" data-i18n="appointment_reason">Motivo de la cita:</label>
+            <textarea name="motivo" id="motivo" rows="4" 
+                      data-i18n-placeholder="reason_placeholder" 
+                      placeholder="Describe brevemente el motivo de la cita" required></textarea>
 
             <!-- Botón para enviar -->
-            <button type="submit">Agendar Cita</button>
+            <button type="submit" data-i18n="schedule_btn">Agendar Cita</button>
         </form>
     </div>
 
+    <!-- Script de idiomas embebido -->
     <script>
+        const languages = {
+            es: {
+                "schedule_appointment": "Agendar Cita",
+                "back": "Regresar",
+                "select_doctor": "Selecciona un doctor:",
+                "select_date": "Selecciona la fecha:",
+                "select_time": "Selecciona la hora:",
+                "appointment_reason": "Motivo de la cita:",
+                "reason_placeholder": "Describe brevemente el motivo de la cita",
+                "schedule_btn": "Agendar Cita"
+            },
+            en: {
+                "schedule_appointment": "Schedule Appointment",
+                "back": "Back",
+                "select_doctor": "Select a doctor:",
+                "select_date": "Select date:",
+                "select_time": "Select time:",
+                "appointment_reason": "Appointment reason:",
+                "reason_placeholder": "Briefly describe the reason for the appointment",
+                "schedule_btn": "Schedule Appointment"
+            }
+        };
+
+        // Gestor de internacionalización
+        class I18nManager {
+            constructor() {
+                this.currentLanguage = localStorage.getItem('language') || 'es';
+                this.loadLanguage();
+            }
+
+            loadLanguage() {
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+                localStorage.setItem('language', this.currentLanguage);
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            updateTexts() {
+                const texts = languages[this.currentLanguage];
+                
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (texts[key]) {
+                        element.textContent = texts[key];
+                    }
+                });
+
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-placeholder');
+                    if (texts[key]) {
+                        element.placeholder = texts[key];
+                    }
+                });
+
+                document.title = this.currentLanguage === 'es' 
+                    ? 'Agendar Cita' 
+                    : 'Schedule Appointment';
+            }
+
+            updateLanguageToggle() {
+                const languageToggle = document.getElementById('languageToggle');
+                if (languageToggle) {
+                    languageToggle.textContent = this.currentLanguage === 'es' ? '🇺🇸' : '🇪🇸';
+                    languageToggle.title = this.currentLanguage === 'es' ? 'English' : 'Español';
+                }
+            }
+        }
+
         const body = document.body;
         const container = document.querySelector('.container');
         const inputs = document.querySelectorAll('input, select, textarea');
-        const button = document.querySelector('button');
+        const button = document.querySelector('button[type="submit"]');
         const homeButton = document.getElementById('home-button');
-        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggle = document.getElementById('themeToggle');
         const topButtons = document.querySelector('.top-buttons');
 
         // Cargar estado del modo oscuro desde localStorage
@@ -211,7 +307,7 @@
             body.classList.add('dark-mode');
             container.classList.add('dark-mode');
             inputs.forEach(input => input.classList.add('dark-mode'));
-            button.classList.add('dark-mode');
+            if (button) button.classList.add('dark-mode');
             homeButton.classList.add('dark-mode');
             topButtons.classList.add('dark-mode');
             themeToggle.textContent = '☀️';
@@ -222,11 +318,17 @@
             const isDarkMode = body.classList.toggle('dark-mode');
             container.classList.toggle('dark-mode');
             inputs.forEach(input => input.classList.toggle('dark-mode'));
-            button.classList.toggle('dark-mode');
+            if (button) button.classList.toggle('dark-mode');
             homeButton.classList.toggle('dark-mode');
             topButtons.classList.toggle('dark-mode');
             themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        });
+
+        // Inicializar sistema de idiomas
+        const i18n = new I18nManager();
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            i18n.toggleLanguage();
         });
     </script>
 </body>

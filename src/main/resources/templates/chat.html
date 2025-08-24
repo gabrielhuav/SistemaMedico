@@ -155,110 +155,74 @@
             background-color: #1e1e1e;
         }
 
-        .theme-toggle {
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: #333;
-        padding: 8px 15px;
-    }
-
-    .theme-toggle:hover {
-        opacity: 0.8;
-    }
-
-        .theme-toggle.dark-mode {
-            color: white;
+        /* Estilos para los botones de configuración */
+        .config-buttons {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
         }
 
-        .header-buttons {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        display: flex;
-        gap: 15px;
-        z-index: 1000;
-    }
+        .config-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
 
-    .back-button {
-        padding: 8px 15px;
-        background-color: #00796b;
-        color: white;
-        text-decoration: none;
-        border-radius: 20px;
-        font-weight: 500;
-        transition: background-color 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
+        .config-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
 
-    .back-button:hover {
-        background-color: #00695c;
-    }
+        .dark-mode .config-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
 
-    body.dark-mode .back-button {
-        background-color: #2d2d2d;
-        color: #ffffff;
-    }
+        .back-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 8px 15px;
+            background-color: #00796b;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 1000;
+        }
 
-    body.dark-mode {
-        background-color: #121212;
-        color: #ffffff;
-    }
+        .back-button:hover {
+            background-color: #00695c;
+        }
 
-    body.dark-mode .chat-container {
-        background-color: #1e1e1e;
-        border-color: #333;
-    }
-
-    body.dark-mode .chat-header {
-        background-color: #2d2d2d;
-        border-color: #333;
-    }
-
-    body.dark-mode .contact {
-        border-color: #333;
-    }
-
-    body.dark-mode .contact:hover {
-        background-color: #2d2d2d;
-    }
-
-    body.dark-mode .chat-input {
-        border-color: #333;
-    }
-
-    body.dark-mode .chat-input input {
-        background-color: #2d2d2d;
-        color: #ffffff;
-        border-color: #333;
-    }
-
-    body.dark-mode .message.received {
-        background-color: #2d2d2d;
-        color: #ffffff;
-    }
-
-    body.dark-mode .message.sent {
-        background-color: #056162;
-        color: #ffffff;
-    }
-
-    body.dark-mode .message-time {
-        color: #888;
-    }
+        .back-button.dark-mode {
+            background-color: #2d2d2d;
+            color: #ffffff;
+        }
     </style>
 </head>
 <body>
-    <div class="header-buttons">
-        <a href="/home" class="back-button">← Volver</a>
-        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
-    </div>   
+    <!-- Botones de configuración -->
+    <div class="config-buttons">
+        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+    </div>
+
+    <a href="/home" class="back-button" data-i18n="back">← Volver</a>
+
     <div class="chat-container">
         <div class="contacts-list">
-            <h2>Contactos</h2>
+            <h2 data-i18n="contacts">Contactos</h2>
             <div th:each="contact : ${contacts}" 
                  class="contact"
                  th:classappend="${contact.id == selectedContactId ? 'active' : ''}"
@@ -269,7 +233,8 @@
 
         <div class="chat-area">
             <div class="chat-header">
-                <h3 th:text="${selectedContact != null ? selectedContact.nombre : 'Selecciona un contacto'}">
+                <h3 th:text="${selectedContact != null ? selectedContact.nombre : 'Selecciona un contacto'}"
+                    data-i18n-default="select_contact">
                     Selecciona un contacto
                 </h3>
             </div>
@@ -288,59 +253,128 @@
                 <input type="hidden" id="receptorId" name="receptorId" 
                        th:value="${selectedContact != null ? selectedContact.id : ''}">
                 <input type="text" id="mensaje" name="mensaje" 
-                       placeholder="Escribe un mensaje..." autocomplete="off" required>
-                <button type="submit" class="send-button">Enviar</button>
+                       data-i18n-placeholder="write_message" placeholder="Escribe un mensaje..." autocomplete="off" required>
+                <button type="submit" class="send-button" data-i18n="send">Enviar</button>
             </form>
         </div>
     </div>
+
+    <!-- Script de idiomas embebido -->
     <script>
-        // Referencias a elementos
-        const themeToggle = document.querySelector('.theme-toggle');
+        const languages = {
+            es: {
+                "back": "← Volver",
+                "contacts": "Contactos",
+                "select_contact": "Selecciona un contacto",
+                "write_message": "Escribe un mensaje...",
+                "send": "Enviar"
+            },
+            en: {
+                "back": "← Back",
+                "contacts": "Contacts",
+                "select_contact": "Select a contact",
+                "write_message": "Write a message...",
+                "send": "Send"
+            }
+        };
+
+        // Gestor de internacionalización
+        class I18nManager {
+            constructor() {
+                this.currentLanguage = localStorage.getItem('language') || 'es';
+                this.loadLanguage();
+            }
+
+            loadLanguage() {
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+                localStorage.setItem('language', this.currentLanguage);
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            updateTexts() {
+                const texts = languages[this.currentLanguage];
+                
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (texts[key]) {
+                        element.textContent = texts[key];
+                    }
+                });
+
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-placeholder');
+                    if (texts[key]) {
+                        element.placeholder = texts[key];
+                    }
+                });
+
+                // Actualizar el texto por defecto si no hay contacto seleccionado
+                const headerElement = document.querySelector('[data-i18n-default="select_contact"]');
+                if (headerElement && headerElement.textContent.trim() === 'Selecciona un contacto') {
+                    headerElement.textContent = texts["select_contact"];
+                }
+
+                document.title = this.currentLanguage === 'es' ? 'Chat Médico' : 'Medical Chat';
+            }
+
+            updateLanguageToggle() {
+                const languageToggle = document.getElementById('languageToggle');
+                if (languageToggle) {
+                    languageToggle.textContent = this.currentLanguage === 'es' ? '🇺🇸' : '🇪🇸';
+                    languageToggle.title = this.currentLanguage === 'es' ? 'English' : 'Español';
+                }
+            }
+        }
+
+        // Modo oscuro
         const body = document.body;
-    
-        // Cargar estado del modo oscuro desde localStorage
+        const themeToggle = document.getElementById('themeToggle');
+
         if (localStorage.getItem('darkMode') === 'enabled') {
             body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
             document.querySelector('.chat-container').classList.add('dark-mode');
             document.querySelector('.chat-header').classList.add('dark-mode');
             document.querySelectorAll('.message').forEach(msg => msg.classList.add('dark-mode'));
             document.querySelector('.chat-input input').classList.add('dark-mode');
             document.querySelectorAll('.contact').forEach(contact => contact.classList.add('dark-mode'));
+            document.querySelector('.back-button').classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
         }
-    
-        // Alternar modo oscuro y guardar estado en localStorage
+
         themeToggle.addEventListener('click', () => {
             const isDarkMode = body.classList.toggle('dark-mode');
-            themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
-    
-            // Cambiar clases de elementos específicos
             document.querySelector('.chat-container').classList.toggle('dark-mode');
             document.querySelector('.chat-header').classList.toggle('dark-mode');
             document.querySelectorAll('.message').forEach(msg => msg.classList.toggle('dark-mode'));
             document.querySelector('.chat-input input').classList.toggle('dark-mode');
             document.querySelectorAll('.contact').forEach(contact => contact.classList.toggle('dark-mode'));
-    
-            // Guardar estado en localStorage
+            document.querySelector('.back-button').classList.toggle('dark-mode');
+            themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        });
+
+        // Inicializar sistema de idiomas
+        const i18n = new I18nManager();
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            i18n.toggleLanguage();
         });
     </script>
 
-    <!-- Agregar variables de Thymeleaf como datos -->
+    <!-- Script funcional existente -->
     <script th:inline="javascript">
-        // Obtener el ID del usuario actual de forma segura con Thymeleaf
         const currentUserId = /*[[${currentUserId}]]*/ null;
         
-        // Función para cambiar tema oscuro/claro
-        
-    
-        // Función para seleccionar contacto
         function selectContact(contactId) {
             if (!contactId) return;
             window.location.href = `/chat?contactId=${contactId}`;
         }
     
-        // Función para actualizar mensajes
         function actualizarMensajes() {
             const receptorId = document.getElementById('receptorId')?.value;
             if (!receptorId) return;
@@ -363,13 +397,7 @@
                 .catch(error => console.error('Error al actualizar mensajes:', error));
         }
     
-        // Inicialización cuando el DOM está listo
         document.addEventListener('DOMContentLoaded', function() {
-            // Cargar preferencia de tema
-            if (localStorage.getItem('darkMode') === 'true') {
-                toggleTheme();
-            }
-    
             const messageForm = document.getElementById('messageForm');
             if (messageForm) {
                 messageForm.addEventListener('submit', function(e) {
@@ -407,10 +435,9 @@
                 });
             }
     
-            // Iniciar actualización automática si hay un contacto seleccionado
             const receptorId = document.getElementById('receptorId')?.value;
             if (receptorId) {
-                actualizarMensajes(); // Actualización inicial
+                actualizarMensajes();
                 setInterval(actualizarMensajes, 5000);
             }
         });

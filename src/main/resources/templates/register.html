@@ -110,50 +110,159 @@
         .copy-text.dark-mode {
             color: #aaaaaa;
         }
+
+        /* Estilos para los botones de configuración */
+        .config-buttons {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .config-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .config-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        .dark-mode .config-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body>
+    <!-- Botones de configuración -->
+    <div class="config-buttons">
+        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+    </div>
+
     <div class="form-container">
-        <h1>Registro Médico</h1>
+        <h1 data-i18n="medical_register">Registro Médico</h1>
         <form action="/register" method="POST">
             <div class="form-floating mb-3">
-                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre" required>
-                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" 
+                       data-i18n-placeholder="name" placeholder="Nombre" required>
+                <label for="nombre" data-i18n="name">Nombre</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
-                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" 
+                       data-i18n-placeholder="email" placeholder="Email" required>
+                <label for="email" data-i18n="email">Email</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="password" id="password" name="password" class="form-control" placeholder="Contraseña" required>
-                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" class="form-control" 
+                       data-i18n-placeholder="password" placeholder="Contraseña" required>
+                <label for="password" data-i18n="password">Contraseña</label>
             </div>
-            <button type="submit" class="btn btn-lg btn-register">Registrarse</button>
+            <button type="submit" class="btn btn-lg btn-register" data-i18n="register">Registrarse</button>
         </form>
         <div class="login-link">
-            <a href="/login">¿Ya tienes cuenta? Inicia Sesión</a>
+            <a href="/login" data-i18n="already_account">¿Ya tienes cuenta? Inicia Sesión</a>
         </div>
-        <p class="copy-text">&copy; 2024 - Sistema Médico</p>
+        <p class="copy-text" data-i18n="copyright">&copy; 2024 - Sistema Médico</p>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Sistema de idiomas embebido -->
+    <script>
+        const languages = {
+            es: {
+                "medical_register": "Registro Médico",
+                "name": "Nombre",
+                "email": "Email",
+                "password": "Contraseña",
+                "register": "Registrarse",
+                "already_account": "¿Ya tienes cuenta? Inicia Sesión",
+                "copyright": "© 2024 - Sistema Médico"
+            },
+            en: {
+                "medical_register": "Medical Registration",
+                "name": "Name",
+                "email": "Email",
+                "password": "Password",
+                "register": "Register",
+                "already_account": "Already have an account? Login",
+                "copyright": "© 2024 - Medical System"
+            }
+        };
+
+        // Gestor de internacionalización
+        class I18nManager {
+            constructor() {
+                this.currentLanguage = localStorage.getItem('language') || 'es';
+                this.loadLanguage();
+            }
+
+            loadLanguage() {
+                this.updateTexts();
+                this.updateLanguageToggle();
+                this.updatePageTitle();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+                localStorage.setItem('language', this.currentLanguage);
+                this.updateTexts();
+                this.updateLanguageToggle();
+                this.updatePageTitle();
+            }
+
+            updateTexts() {
+                const texts = languages[this.currentLanguage];
+                
+                // Actualizar elementos con data-i18n
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (texts[key]) {
+                        element.textContent = texts[key];
+                    }
+                });
+
+                // Actualizar placeholders
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-placeholder');
+                    if (texts[key]) {
+                        element.placeholder = texts[key];
+                    }
+                });
+            }
+
+            updateLanguageToggle() {
+                const languageToggle = document.getElementById('languageToggle');
+                if (languageToggle) {
+                    languageToggle.textContent = this.currentLanguage === 'es' ? '🇺🇸' : '🇪🇸';
+                    languageToggle.title = this.currentLanguage === 'es' ? 'English' : 'Español';
+                }
+            }
+
+            updatePageTitle() {
+                document.title = this.currentLanguage === 'es' 
+                    ? 'Registro - Sistema Médico' 
+                    : 'Register - Medical System';
+            }
+        }
+    </script>
+
+    <!-- Scripts de funcionalidad -->
     <script>
         // Modo oscuro con localStorage
         const body = document.body;
         const formContainer = document.querySelector('.form-container');
-
-        // Crear botón de cambio de tema
-        const themeToggle = document.createElement('button');
-        themeToggle.textContent = '🌙';
-        themeToggle.style.position = 'absolute';
-        themeToggle.style.top = '10px';
-        themeToggle.style.right = '10px';
-        themeToggle.style.background = 'none';
-        themeToggle.style.border = 'none';
-        themeToggle.style.fontSize = '1.5rem';
-        themeToggle.style.cursor = 'pointer';
-        document.body.appendChild(themeToggle);
+        const themeToggle = document.getElementById('themeToggle');
 
         // Cargar estado del modo oscuro desde localStorage
         if (localStorage.getItem('darkMode') === 'enabled') {
@@ -168,6 +277,14 @@
             formContainer.classList.toggle('dark-mode');
             themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        });
+
+        // Inicializar sistema de idiomas
+        const i18n = new I18nManager();
+        
+        // Event listener para el botón de idioma
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            i18n.toggleLanguage();
         });
     </script>
 </body>

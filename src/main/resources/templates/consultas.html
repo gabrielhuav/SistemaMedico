@@ -21,7 +21,7 @@
 
         .container {
             max-width: 900px;
-            margin: 50px auto;
+            margin: 80px auto 50px; /* Margen superior aumentado para los botones */
             background: #fff;
             padding: 20px;
             border-radius: 8px;
@@ -101,22 +101,6 @@
             background-color: #455a64;
         }
 
-        .btn-danger {
-            background-color: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background-color: #a71d2a;
-        }
-
-        .btn-danger.dark-mode {
-            background-color: #b71c1c;
-        }
-
-        .btn-danger.dark-mode:hover {
-            background-color: #d32f2f;
-        }
-
         .message {
             text-align: center;
             margin-bottom: 20px;
@@ -145,37 +129,67 @@
             background-color: #b71c1c;
             color: #ffffff;
         }
+
+        /* Estilos para los botones de configuración */
+        .config-buttons {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .config-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .config-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        .dark-mode .config-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body>
+    <!-- Botones de configuración -->
+    <div class="config-buttons">
+        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+    </div>
+
     <div class="container">
-        <h1>Gestión de Consultas</h1>
-        <a href="/home" class="btn">Regresar</a>
+        <h1 data-i18n="consultation_management">Gestión de Consultas</h1>
+        <a href="/home" class="btn" data-i18n="back">Regresar</a>
 
         <!-- Mensajes de éxito o error -->
         <div th:if="${mensaje}" th:text="${mensaje}" class="message success"></div>
         <div th:if="${error}" th:text="${error}" class="message error"></div>
 
-        <!-- Botón para registrar nueva consulta (solo para doctores) -->
-        <!-- <a href="/consultas/registrar" class="btn">Registrar Nueva Consulta</a> -->
-
         <!-- Tabla de consultas -->
         <table>
             <thead>
                 <tr>
-                
-                    <th>Paciente</th>
-                    <th>Doctor</th>
-                    <th>Síntomas</th>
-                    <th>Medicamentos</th>
-                    <th>Dosis</th>
-                    <th>Próxima Cita</th>
+                    <th data-i18n="patient">Paciente</th>
+                    <th data-i18n="doctor">Doctor</th>
+                    <th data-i18n="symptoms">Síntomas</th>
+                    <th data-i18n="medications">Medicamentos</th>
+                    <th data-i18n="dosage">Dosis</th>
+                    <th data-i18n="next_appointment">Próxima Cita</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Generar dinámicamente las consultas desde el backend -->
                 <tr th:each="consulta : ${consultas}">
-                   
                     <td th:text="${consulta.paciente.nombre}"></td>
                     <td th:text="${consulta.doctor.nombre}"></td>
                     <td th:text="${consulta.sintomas}"></td>
@@ -185,32 +199,89 @@
                 </tr>
                 <!-- Mostrar mensaje si no hay consultas -->
                 <tr th:if="${#lists.isEmpty(consultas)}">
-                    <td colspan="7" style="text-align: center;">No hay consultas registradas.</td>
+                    <td colspan="6" style="text-align: center;" data-i18n="no_consultations">No hay consultas registradas.</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <!-- Botón de cambio de tema -->
+    <!-- Script de idiomas embebido -->
     <script>
+        const languages = {
+            es: {
+                "consultation_management": "Gestión de Consultas",
+                "back": "Regresar",
+                "patient": "Paciente",
+                "doctor": "Doctor",
+                "symptoms": "Síntomas",
+                "medications": "Medicamentos",
+                "dosage": "Dosis",
+                "next_appointment": "Próxima Cita",
+                "no_consultations": "No hay consultas registradas."
+            },
+            en: {
+                "consultation_management": "Consultation Management",
+                "back": "Back",
+                "patient": "Patient",
+                "doctor": "Doctor",
+                "symptoms": "Symptoms",
+                "medications": "Medications",
+                "dosage": "Dosage",
+                "next_appointment": "Next Appointment",
+                "no_consultations": "No consultations registered."
+            }
+        };
+
+        // Gestor de internacionalización
+        class I18nManager {
+            constructor() {
+                this.currentLanguage = localStorage.getItem('language') || 'es';
+                this.loadLanguage();
+            }
+
+            loadLanguage() {
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+                localStorage.setItem('language', this.currentLanguage);
+                this.updateTexts();
+                this.updateLanguageToggle();
+            }
+
+            updateTexts() {
+                const texts = languages[this.currentLanguage];
+                
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (texts[key]) {
+                        element.textContent = texts[key];
+                    }
+                });
+
+                document.title = this.currentLanguage === 'es' 
+                    ? 'Gestión de Consultas' 
+                    : 'Consultation Management';
+            }
+
+            updateLanguageToggle() {
+                const languageToggle = document.getElementById('languageToggle');
+                if (languageToggle) {
+                    languageToggle.textContent = this.currentLanguage === 'es' ? '🇺🇸' : '🇪🇸';
+                    languageToggle.title = this.currentLanguage === 'es' ? 'English' : 'Español';
+                }
+            }
+        }
+
+        // Modo oscuro
         const body = document.body;
         const container = document.querySelector('.container');
         const tableHeaders = document.querySelectorAll('table th');
         const tableCells = document.querySelectorAll('table td');
+        const themeToggle = document.getElementById('themeToggle');
 
-        // Crear botón de cambio de tema
-        const themeToggle = document.createElement('button');
-        themeToggle.textContent = '🌙';
-        themeToggle.style.position = 'absolute';
-        themeToggle.style.top = '10px';
-        themeToggle.style.right = '10px';
-        themeToggle.style.background = 'none';
-        themeToggle.style.border = 'none';
-        themeToggle.style.fontSize = '1.5rem';
-        themeToggle.style.cursor = 'pointer';
-        document.body.appendChild(themeToggle);
-
-        // Cargar estado del modo oscuro desde localStorage
         if (localStorage.getItem('darkMode') === 'enabled') {
             body.classList.add('dark-mode');
             container.classList.add('dark-mode');
@@ -219,7 +290,6 @@
             themeToggle.textContent = '☀️';
         }
 
-        // Alternar modo oscuro y guardar estado en localStorage
         themeToggle.addEventListener('click', () => {
             const isDarkMode = body.classList.toggle('dark-mode');
             container.classList.toggle('dark-mode');
@@ -227,6 +297,12 @@
             tableCells.forEach(cell => cell.classList.toggle('dark-mode'));
             themeToggle.textContent = isDarkMode ? '☀️' : '🌙';
             localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        });
+
+        // Inicializar sistema de idiomas
+        const i18n = new I18nManager();
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            i18n.toggleLanguage();
         });
     </script>
 </body>
