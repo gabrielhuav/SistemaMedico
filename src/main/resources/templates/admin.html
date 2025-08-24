@@ -22,7 +22,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 50px auto;
             background: #ffffff;
             padding: 20px;
@@ -36,13 +36,72 @@
             color: #ffffff;
         }
 
-        h1, h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #dee2e6;
         }
 
-        h1.dark-mode, h2.dark-mode {
+        .header-section.dark-mode {
+            border-bottom-color: #495057;
+        }
+
+        .header-title {
+            color: #333;
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .header-title.dark-mode {
+            color: #80cbc4;
+        }
+
+        .config-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .config-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            color: #007bff;
+        }
+
+        .config-btn:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        .config-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.3);
+        }
+
+        .dark-mode .config-btn {
+            color: #80cbc4;
+        }
+
+        .dark-mode .config-btn:hover {
+            background-color: rgba(128, 203, 196, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        h2.dark-mode {
             color: #80cbc4;
         }
 
@@ -54,14 +113,16 @@
         }
 
         table th, table td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
             border: 1px solid #ddd;
+            vertical-align: middle;
         }
 
         table th {
             background-color: #007bff;
             color: white;
+            font-weight: 600;
         }
 
         table th.dark-mode {
@@ -77,6 +138,7 @@
         table td.dark-mode {
             background-color: #2c2c2c;
             color: #ffffff;
+            border-color: #555;
         }
 
         .form-control {
@@ -90,40 +152,53 @@
         .form-control:focus {
             border-color: #007bff;
             outline: none;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
         }
 
         .form-control.dark-mode {
-            background-color: #9c9c9c;
+            background-color: #495057;
             color: #ffffff;
             border: 1px solid #555;
         }
 
         .form-control.dark-mode:focus {
             border-color: #80cbc4;
+            box-shadow: 0 0 0 0.25rem rgba(128, 203, 196, 0.25);
         }
 
         .btn {
             display: inline-block;
-            padding: 10px 15px;
-            margin: 5px 0;
-            background-color: #007bff;
+            padding: 8px 16px;
+            margin: 2px;
             color: white;
             text-decoration: none;
             border-radius: 4px;
             text-align: center;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
         }
 
         .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-primary:hover {
             background-color: #0056b3;
         }
 
-        .btn.dark-mode {
-            background-color: #37474f;
+        .btn-secondary {
+            background-color: #6c757d;
         }
 
-        .btn.dark-mode:hover {
-            background-color: #455a64;
+        .btn-secondary:hover {
+            background-color: #545b62;
         }
 
         .btn-danger {
@@ -134,29 +209,13 @@
             background-color: #a71d2a;
         }
 
-        .btn-danger.dark-mode {
-            background-color: #b71c1c;
-        }
-
-        .btn-danger.dark-mode:hover {
-            background-color: #d32f2f;
-        }
-
         .btn-warning {
             background-color: #ffc107;
-            color: black;
+            color: #212529;
         }
 
         .btn-warning:hover {
             background-color: #e0a800;
-        }
-
-        .btn-warning.dark-mode {
-            background-color: #ffb300;
-        }
-
-        .btn-warning.dark-mode:hover {
-            background-color: #ffa000;
         }
 
         .btn-success {
@@ -167,103 +226,307 @@
             background-color: #218838;
         }
 
-        .btn-success.dark-mode {
-            background-color: #43a047;
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
         }
 
-        .btn-success.dark-mode:hover {
-            background-color: #388e3c;
+        .badge {
+            font-size: 0.75rem;
+        }
+
+        .form-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            transition: background-color 0.3s;
+        }
+
+        .form-section.dark-mode {
+            background-color: #343a40;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-section {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .config-buttons {
+                order: -1;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                margin: 1px 0;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Panel de Administración</h1>
-        <div class="d-flex justify-content-between mb-3">
-            <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
-            <a href="/home" class="btn btn-secondary">Regresar</a>
+        <!-- Header con título y botones de configuración -->
+        <div class="header-section">
+            <h1 class="header-title" data-i18n="admin_panel">Panel de Administración</h1>
+            
+            <!-- Botones de configuración -->
+            <div class="config-buttons">
+                <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+                <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+                <div class="ms-2">
+                    <a href="/logout" class="btn btn-danger btn-sm" data-i18n="logout">Cerrar Sesión</a>
+                    <a href="/home" class="btn btn-secondary btn-sm" data-i18n="go_back">Regresar</a>
+                </div>
+            </div>
         </div>
 
-        <h2>Agregar Usuario</h2>
-        <form action="/admin/users" method="post" class="mb-4">
-            <div class="mb-3">
-                <input type="text" name="nombre" class="form-control" placeholder="Nombre de Usuario" required>
-            </div>
-            <div class="mb-3">
-                <input type="email" name="email" class="form-control" placeholder="Email" required>
-            </div>
-            <div class="mb-3">
-                <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Agregar Usuario</button>
-        </form>
+        <!-- Formulario para agregar usuario -->
+        <div class="form-section">
+            <h2 data-i18n="add_user">Agregar Usuario</h2>
+            <form action="/admin/users" method="post" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" name="nombre" class="form-control" 
+                           data-i18n-placeholder="username" placeholder="Nombre de Usuario" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="email" name="email" class="form-control" 
+                           data-i18n-placeholder="email" placeholder="Email" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="password" name="password" class="form-control" 
+                           data-i18n-placeholder="password" placeholder="Contraseña" required>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary" data-i18n="add_user_btn">Agregar Usuario</button>
+                </div>
+            </form>
+        </div>
 
-        <h2>Usuarios</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Roles</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="usuario : ${usuarios}">
-                    <td th:text="${usuario.id}"></td>
-                    <td th:text="${usuario.nombre}"></td>
-                    <td th:text="${usuario.email}"></td>
-                    <td>
-                        <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre}" class="badge bg-info me-1"></span>
-                    </td>
-                    <td>
-                        <!-- Botón para alternar rol de Admin -->
-                        <button class="btn btn-warning" 
-                                th:onclick="'toggleRole(event, \'Admin\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-admin\')'">
-                            <span th:text="${usuario.roles.contains('ROLE_ADMIN') ? 'Quitar Admin' : 'Hacer Admin'}"></span>
-                        </button>
+        <!-- Tabla de usuarios -->
+        <h2 data-i18n="users">Usuarios</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th data-i18n="id">ID</th>
+                        <th data-i18n="name">Nombre</th>
+                        <th data-i18n="email">Email</th>
+                        <th data-i18n="roles">Roles</th>
+                        <th data-i18n="actions">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="usuario : ${usuarios}">
+                        <td th:text="${usuario.id}"></td>
+                        <td th:text="${usuario.nombre}"></td>
+                        <td th:text="${usuario.email}"></td>
+                        <td>
+                            <span th:each="rol : ${usuario.roles}" th:text="${rol.nombre}" class="badge bg-info me-1"></span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <!-- Botón para alternar rol de Admin -->
+                                <button class="btn btn-warning btn-sm" 
+                                        th:onclick="'toggleRole(event, \'Admin\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-admin\')'">
+                                    <span th:if="${usuario.roles.contains('ROLE_ADMIN')}" data-i18n="remove_admin">Quitar Admin</span>
+                                    <span th:unless="${usuario.roles.contains('ROLE_ADMIN')}" data-i18n="make_admin">Hacer Admin</span>
+                                </button>
 
-                        <!-- Botón para alternar rol de Doctor -->
-                        <button class="btn btn-success" 
-                                th:onclick="'toggleRole(event, \'Doctor\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-doctor\')'">
-                            <span th:text="${usuario.roles.contains('ROLE_DOCTOR') ? 'Quitar Doctor' : 'Hacer Doctor'}"></span>
-                        </button>
+                                <!-- Botón para alternar rol de Doctor -->
+                                <button class="btn btn-success btn-sm" 
+                                        th:onclick="'toggleRole(event, \'Doctor\', ' + ${usuario.id} + ', \'/api/users/' + ${usuario.id} + '/toggle-doctor\')'">
+                                    <span th:if="${usuario.roles.contains('ROLE_DOCTOR')}" data-i18n="remove_doctor">Quitar Doctor</span>
+                                    <span th:unless="${usuario.roles.contains('ROLE_DOCTOR')}" data-i18n="make_doctor">Hacer Doctor</span>
+                                </button>
 
-                        <!-- Botón para eliminar usuario -->
-                        <button class="btn btn-danger" th:onclick="'deleteUser(' + ${usuario.id} + ')'">Eliminar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                                <!-- Botón para eliminar usuario -->
+                                <button class="btn btn-danger btn-sm" th:onclick="'deleteUser(' + ${usuario.id} + ')'">
+                                    <span data-i18n="delete">Eliminar</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Sistema de idiomas embebido -->
+    <script>
+        const languages = {
+            es: {
+                "admin_panel": "Panel de Administración",
+                "logout": "Cerrar Sesión",
+                "go_back": "Regresar",
+                "add_user": "Agregar Usuario",
+                "username": "Nombre de Usuario",
+                "email": "Email",
+                "password": "Contraseña",
+                "add_user_btn": "Agregar Usuario",
+                "users": "Usuarios",
+                "id": "ID",
+                "name": "Nombre",
+                "roles": "Roles",
+                "actions": "Acciones",
+                "remove_admin": "Quitar Admin",
+                "make_admin": "Hacer Admin",
+                "remove_doctor": "Quitar Doctor",
+                "make_doctor": "Hacer Doctor",
+                "delete": "Eliminar",
+                "confirm_change_admin": "¿Estás seguro de cambiar el rol de administrador?",
+                "confirm_change_doctor": "¿Estás seguro de cambiar el rol de doctor?",
+                "confirm_delete": "¿Estás seguro de eliminar este usuario?",
+                "delete_warning": "Esta acción no se puede deshacer.",
+                "yes_change": "Sí, cambiar",
+                "yes_delete": "Sí, eliminar",
+                "cancel": "Cancelar",
+                "success": "¡Éxito!",
+                "admin_role_updated": "El rol de administrador ha sido actualizado.",
+                "doctor_role_updated": "El rol de doctor ha sido actualizado.",
+                "user_deleted": "El usuario ha sido eliminado.",
+                "error": "Error",
+                "update_role_error": "No se pudo actualizar el rol.",
+                "delete_user_error": "No se pudo eliminar el usuario.",
+                "request_error": "Ocurrió un error al procesar la solicitud."
+            },
+            en: {
+                "admin_panel": "Administration Panel",
+                "logout": "Logout",
+                "go_back": "Go Back",
+                "add_user": "Add User",
+                "username": "Username",
+                "email": "Email",
+                "password": "Password",
+                "add_user_btn": "Add User",
+                "users": "Users",
+                "id": "ID",
+                "name": "Name",
+                "roles": "Roles",
+                "actions": "Actions",
+                "remove_admin": "Remove Admin",
+                "make_admin": "Make Admin",
+                "remove_doctor": "Remove Doctor",
+                "make_doctor": "Make Doctor",
+                "delete": "Delete",
+                "confirm_change_admin": "Are you sure you want to change the administrator role?",
+                "confirm_change_doctor": "Are you sure you want to change the doctor role?",
+                "confirm_delete": "Are you sure you want to delete this user?",
+                "delete_warning": "This action cannot be undone.",
+                "yes_change": "Yes, change",
+                "yes_delete": "Yes, delete",
+                "cancel": "Cancel",
+                "success": "Success!",
+                "admin_role_updated": "The administrator role has been updated.",
+                "doctor_role_updated": "The doctor role has been updated.",
+                "user_deleted": "The user has been deleted.",
+                "error": "Error",
+                "update_role_error": "Could not update the role.",
+                "delete_user_error": "Could not delete the user.",
+                "request_error": "An error occurred while processing the request."
+            }
+        };
+
+        // Gestor de internacionalización
+        class I18nManager {
+            constructor() {
+                this.currentLanguage = localStorage.getItem('language') || 'es';
+                this.loadLanguage();
+            }
+
+            loadLanguage() {
+                this.updateTexts();
+                this.updateLanguageToggle();
+                this.updatePageTitle();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'es' ? 'en' : 'es';
+                localStorage.setItem('language', this.currentLanguage);
+                this.updateTexts();
+                this.updateLanguageToggle();
+                this.updatePageTitle();
+            }
+
+            updateTexts() {
+                const texts = languages[this.currentLanguage];
+                
+                // Actualizar elementos con data-i18n
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (texts[key]) {
+                        element.textContent = texts[key];
+                    }
+                });
+
+                // Actualizar placeholders
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-placeholder');
+                    if (texts[key]) {
+                        element.placeholder = texts[key];
+                    }
+                });
+            }
+
+            updateLanguageToggle() {
+                const languageToggle = document.getElementById('languageToggle');
+                if (languageToggle) {
+                    languageToggle.textContent = this.currentLanguage === 'es' ? '🇺🇸' : '🇪🇸';
+                    languageToggle.title = this.currentLanguage === 'es' ? 'English' : 'Español';
+                }
+            }
+
+            updatePageTitle() {
+                document.title = this.currentLanguage === 'es' 
+                    ? 'Panel de Administración - Sistema Médico' 
+                    : 'Administration Panel - Medical System';
+            }
+
+            getText(key) {
+                return languages[this.currentLanguage][key] || key;
+            }
+        }
+
+        // Inicializar sistema de idiomas
+        const i18n = new I18nManager();
+    </script>
+
     <script>
         // Función para alternar roles (Admin o Doctor)
         function toggleRole(event, role, userId, url) {
             event.preventDefault();
-            const action = role === 'Admin' ? 'administrador' : 'doctor';
+            const confirmKey = role === 'Admin' ? 'confirm_change_admin' : 'confirm_change_doctor';
+            const successKey = role === 'Admin' ? 'admin_role_updated' : 'doctor_role_updated';
+            
             Swal.fire({
-                title: `¿Estás seguro de cambiar el rol de ${action}?`,
+                title: i18n.getText(confirmKey),
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Sí, cambiar',
-                cancelButtonText: 'Cancelar'
+                confirmButtonText: i18n.getText('yes_change'),
+                cancelButtonText: i18n.getText('cancel')
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch(url, { method: 'POST' })
                         .then(response => {
                             if (response.ok) {
-                                Swal.fire('¡Éxito!', `El rol de ${action} ha sido actualizado.`, 'success')
+                                Swal.fire(i18n.getText('success'), i18n.getText(successKey), 'success')
                                     .then(() => location.reload());
                             } else {
-                                Swal.fire('Error', 'No se pudo actualizar el rol.', 'error');
+                                Swal.fire(i18n.getText('error'), i18n.getText('update_role_error'), 'error');
                             }
                         })
                         .catch(error => {
-                            Swal.fire('Error', 'Ocurrió un error al procesar la solicitud.', 'error');
+                            Swal.fire(i18n.getText('error'), i18n.getText('request_error'), 'error');
                         });
                 }
             });
@@ -272,69 +535,76 @@
         // Función para eliminar un usuario
         function deleteUser(userId) {
             Swal.fire({
-                title: '¿Estás seguro de eliminar este usuario?',
-                text: 'Esta acción no se puede deshacer.',
+                title: i18n.getText('confirm_delete'),
+                text: i18n.getText('delete_warning'),
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
+                confirmButtonText: i18n.getText('yes_delete'),
+                cancelButtonText: i18n.getText('cancel')
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch(`/api/users/${userId}`, { method: 'DELETE' })
                         .then(response => {
                             if (response.ok) {
-                                Swal.fire('¡Eliminado!', 'El usuario ha sido eliminado.', 'success')
+                                Swal.fire(i18n.getText('success'), i18n.getText('user_deleted'), 'success')
                                     .then(() => location.reload());
                             } else {
-                                Swal.fire('Error', 'No se pudo eliminar el usuario.', 'error');
+                                Swal.fire(i18n.getText('error'), i18n.getText('delete_user_error'), 'error');
                             }
                         })
                         .catch(error => {
-                            Swal.fire('Error', 'Ocurrió un error al procesar la solicitud.', 'error');
+                            Swal.fire(i18n.getText('error'), i18n.getText('request_error'), 'error');
                         });
                 }
             });
         }
     </script>
+
     <script>
         // Modo oscuro con localStorage
-        const body = document.body;
-        const container = document.querySelector('.container');
-        const tableHeaders = document.querySelectorAll('table th');
-        const tableCells = document.querySelectorAll('table td');
-        const formControls = document.querySelectorAll('.form-control');
+        document.addEventListener('DOMContentLoaded', function() {
+            const body = document.body;
+            const container = document.querySelector('.container');
+            const headerSection = document.querySelector('.header-section');
+            const headerTitle = document.querySelector('.header-title');
+            const formSection = document.querySelector('.form-section');
+            const tableHeaders = document.querySelectorAll('table th');
+            const tableCells = document.querySelectorAll('table td');
+            const formControls = document.querySelectorAll('.form-control');
+            const h2Elements = document.querySelectorAll('h2');
+            const themeToggle = document.getElementById('themeToggle');
 
-        // Crear botón de cambio de tema
-        const themeToggle = document.createElement('button');
-        themeToggle.textContent = '🌙';
-        themeToggle.style.position = 'absolute';
-        themeToggle.style.top = '10px';
-        themeToggle.style.right = '10px';
-        themeToggle.style.background = 'none';
-        themeToggle.style.border = 'none';
-        themeToggle.style.fontSize = '1.5rem';
-        themeToggle.style.cursor = 'pointer';
-        document.body.appendChild(themeToggle);
+            // Cargar estado del modo oscuro desde localStorage
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                applyDarkMode(true);
+            }
 
-        // Cargar estado del modo oscuro desde localStorage
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            body.classList.add('dark-mode');
-            container.classList.add('dark-mode');
-            tableHeaders.forEach(header => header.classList.add('dark-mode'));
-            tableCells.forEach(cell => cell.classList.add('dark-mode'));
-            formControls.forEach(control => control.classList.add('dark-mode'));
-            themeToggle.textContent = '☀';
-        }
+            function applyDarkMode(isDark) {
+                body.classList.toggle('dark-mode', isDark);
+                container.classList.toggle('dark-mode', isDark);
+                headerSection.classList.toggle('dark-mode', isDark);
+                headerTitle.classList.toggle('dark-mode', isDark);
+                formSection.classList.toggle('dark-mode', isDark);
+                
+                tableHeaders.forEach(header => header.classList.toggle('dark-mode', isDark));
+                tableCells.forEach(cell => cell.classList.toggle('dark-mode', isDark));
+                formControls.forEach(control => control.classList.toggle('dark-mode', isDark));
+                h2Elements.forEach(h2 => h2.classList.toggle('dark-mode', isDark));
+                
+                themeToggle.textContent = isDark ? '☀️' : '🌙';
+            }
 
-        // Alternar modo oscuro y guardar estado en localStorage
-        themeToggle.addEventListener('click', () => {
-            const isDarkMode = body.classList.toggle('dark-mode');
-            container.classList.toggle('dark-mode');
-            tableHeaders.forEach(header => header.classList.toggle('dark-mode'));
-            tableCells.forEach(cell => cell.classList.toggle('dark-mode'));
-            formControls.forEach(control => control.classList.toggle('dark-mode'));
-            themeToggle.textContent = isDarkMode ? '☀' : '🌙';
-            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            // Alternar modo oscuro y guardar estado en localStorage
+            themeToggle.addEventListener('click', () => {
+                const isDarkMode = !body.classList.contains('dark-mode');
+                applyDarkMode(isDarkMode);
+                localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            });
+
+            // Event listener para el botón de idioma
+            document.getElementById('languageToggle').addEventListener('click', () => {
+                i18n.toggleLanguage();
+            });
         });
     </script>
 </body>

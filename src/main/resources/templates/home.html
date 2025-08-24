@@ -110,40 +110,52 @@
             background-color: #004d40;
         }
 
-        /* Estilos para los botones de configuración */
-        .config-buttons {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-        }
-
+        /* Estilos para los botones de configuración en la navbar */
         .config-btn {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             cursor: pointer;
-            padding: 5px;
+            padding: 8px 12px;
             border-radius: 5px;
             transition: all 0.3s ease;
             color: white;
+            margin: 0 2px;
         }
 
         .config-btn:hover {
             background-color: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+            transform: scale(1.05);
+        }
+
+        .config-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Espaciado entre elementos de la navbar */
+        .navbar-nav .nav-item {
+            margin: 0 3px;
+        }
+
+        /* Responsive para botones pequeños */
+        @media (max-width: 768px) {
+            .config-btn {
+                font-size: 1rem;
+                padding: 6px 10px;
+            }
+            
+            .navbar-nav {
+                align-items: center;
+            }
+            
+            .navbar-nav .nav-item {
+                margin: 2px 0;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Botones de configuración -->
-    <div class="config-buttons">
-        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
-        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
-    </div>
-
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
@@ -153,8 +165,24 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item position-relative" style="margin-top: 10px;">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <!-- Botón de idioma -->
+                    <li class="nav-item">
+                        <button id="languageToggle" class="config-btn" title="Cambiar idioma">🇺🇸</button>
+                    </li>
+                    
+                    <!-- Botón de tema -->
+                    <li class="nav-item">
+                        <button id="themeToggle" class="config-btn" title="Cambiar tema">🌙</button>
+                    </li>
+                    
+                    <!-- Separador visual -->
+                    <li class="nav-item">
+                        <span class="navbar-text text-white-50 mx-2">|</span>
+                    </li>
+                    
+                    <!-- Notificaciones -->
+                    <li class="nav-item position-relative">
                         <a href="/notificaciones" class="btn btn-primary btn-sm d-flex align-items-center gap-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
                                 <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"/>
